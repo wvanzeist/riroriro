@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Combining the scripts for the inspiral and merger waveforms and matching them
-together. Partially based on the work of Huerta et al. (2017) and Buskirk et
-al. (2019), as well as scripts by JJ Eldridge.
-
-@author: woutervanzeist
+Script that simulates and outputs individual gravitational waveforms. Partially
+based on the work of Huerta et al. (2017) and Buskirk et al. (2019), as well as
+scripts by JJ Eldridge.
 """
 
 import numpy as np
