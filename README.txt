@@ -1,0 +1,7 @@
+This is a set of scripts to simulate the gravitational waveforms of mergers of black holes and/or neutron stars, and calculate several properties of these mergers and waveforms.
+
+The first script in the process is “1_GW_simulator”, which simulates the gravitational waveform of a given merger. The inputs to this script that can be adjusted are listed at the start in the “Input constants” section. The two main input variables are “logMc”, which takes the logarithm base 10 of the chirp mass of the merging binary in solar masses; and q, which takes the mass ratio of the binary. The script has been tested for logMc between 0.0 and 2.0 and q between 0.1 and 1.0.
+
+“1_GW_simulator” gives as output a file that describes the gravitational waveform that would be produced by the binary with the properties in the inputs; it is an array of data points where the first column is time from the start of the model, the second column is the frequency of the gravitational wave at that time and the third is the amplitude of the strain at that time.
+
+In “1_GW_simulator”, the distance from the binary to the observer is taken by default to be 100 Mpc; adjustment for the distance to the binary is instead done by subsequent scripts in the process. Similar, this script assumes the inclination angle of the binary is zero (i.e. perfect alignment), and adjustment for the effect of imperfect alignment is done by subsequent scripts.
