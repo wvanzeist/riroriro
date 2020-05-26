@@ -208,6 +208,7 @@ for i in range(reduction_factor,len(i_time),reduction_factor): #every nth point
 #overwriting arrays with reduced versions
 i_time = reduced_i_time
 omega = reduced_omega
+freq = reduced_freq
 i_phase = reduced_i_phase
 Aorth = reduced_Aorth
 Adiag = reduced_Adiag
