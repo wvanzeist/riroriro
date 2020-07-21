@@ -457,20 +457,6 @@ def list_size_reducer(reduction_factor,your_list):
     assert type(reduction_factor) == int, 'reduction_factor should be an int.'
     assert type(your_list) == list, ('The thing to be reduced needs to be a '
                                      'list.')
-    """
-    #initialisation
-    output_lists = np.zeros((len(args)))
-    for i in range(len(args)):
-        output_lists[i] = [0]
-    
-    #for each input list, create output list with every nth point    
-    for i in range(len(args)):
-        output_lists[i][0] = args[i][0]
-        for j in range(reduction_factor,len(args[i]),reduction_factor):
-            output_lists[i].append(args[i][j])
-            
-    return output_lists
-    """
     
     #create new list with every nth point of your_list
     reduced_list = [your_list[0]]
