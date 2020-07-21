@@ -16,12 +16,12 @@ def get_M_and_eta(**kwargs):
     ----------
     First method
     m1: float
-        Mass of one object in binary.
+        Mass of one object in binary in solar masses.
     m2: float
-        Mass of other object in binary.
+        Mass of other object in binary in solar masses.
     Second method
     logMc: float
-        log10(the chirp mass of the binary).
+        log10(the chirp mass of the binary in solar masses).
     q: float
         The mass ratio of the objects in the binary.
     
@@ -259,9 +259,10 @@ def inspiral_phase_freq_integration(x,dt,M):
     Parameters
     ----------
     x: list of floats
-        Values of the post-Newtonian parameter over time.
+        Values of the post-Newtonian parameter over time, from x_integration().
     dt: list of floats
-        Timesteps in geometric units between each value of xtimes.
+        Timesteps in geometric units between each value of xtimes, from
+        x_integration().
     M: float
         Total mass of the binary, can be obtained from get_M_and_eta().
         
@@ -308,7 +309,7 @@ def radius_calculation(x,M,eta):
     Parameters
     ----------
     x: list of floats
-        Values of the post-Newtonian parameter over time.
+        Values of the post-Newtonian parameter over time, from x_integration().
     M: float
         Total mass of the binary, can be obtained from get_M_and_eta().
     eta: float
@@ -342,3 +343,138 @@ def radius_calculation(x,M,eta):
         rdot[i] = PNderiv(x[i],M,eta) * (-2*r0pn*x[i]**-2 + r2pn + 2*r3pn*x[i])
         
     return [r,rdot]
+
+def a1_a2_calculation(r,rdot,omega,D,M,eta):
+    """
+    Calculation of A1 and A2, two coefficients used in the calculation of
+    strain polarisations, based on Buskirk et al. (2019) equation 9.
+    
+    Parameters
+    ----------
+    r: list of floats
+        Values of the orbital radius over time, from radius_calculation().
+    rdot: list of floats
+        Values of the time-derivative of the radius, from radius_calculation().
+    omega: list of floats
+        Values of the angular frequency over time, from
+        inspiral_phase_freq_integration().
+    D: float
+        Distance from the detector to the binary, in Mpc. IMPORTANT: if you
+        want to feed the strain values into the SNR calculator, use the default
+        distance of 100 Mpc here and instead set the distance when using the
+        SNR functions.
+    M: float
+        Total mass of the binary, can be obtained from get_M_and_eta().
+    eta: float
+        Symmetric mass ratio of the binary, can be obtained from
+        get_M_and_eta().
+        
+    Results
+    -------
+    [A1,A2]: list of lists of floats
+        The first list is the values  of the A1 parameter used in strain
+        calculation over time, the second list is the A2 parameter.
+    """
+    
+    #input type checking
+    assert type(r) == list, 'r should be a list.'
+    assert type(rdot) == list, 'rdot should be a list.'
+    assert type(omega) == list, 'omega should be a list.'
+    assert type(D) == float, 'D should be a float.'
+    assert type(M) == float, 'M should be a float.'
+    assert type(eta) == float, 'eta should be a float.'
+    
+    Dkm = D * 3.086e19                          #conversion from Mpc to km
+    
+    A1 = np.zeros((len(r)))
+    A2 = np.zeros((len(r)))
+    
+    for i in range(len(r)):                     #based on Buskirk eq. 9
+        A1[i] = (-2*M*eta*(1/Dkm))*(rdot[i]**2 + (r[i]*omega[i])**2 + 1/r[i])
+        A2[i] = (-2*M*eta*(1/Dkm))*(2*r[i]*rdot[i]*omega[i])
+        
+    return [A1,A2]
+
+def inspiral_strain_polarisations(A1,A2,i_phase):
+    """
+    Calculating the values of the two polarisations of strain for the inspiral,
+    using the coefficients from a1_a2_calculation().
+    
+    Parameters
+    ----------
+    A1: list of floats
+        Values of the first strain coefficient over time, from
+        a1_a2_calculation().
+    A2: list of floats
+        Values of the second strain coefficient over time, from
+        a1_a2_calculation().
+    i_phase: list of floats
+        Values of the orbital phase at each timestep, from
+        inspiral_phase_freq_integration().
+        
+    Results
+    -------
+    [Aorth,Adiag]: list of lists of floats
+        The first list is the values of the orthogonal/plus polarisation of
+        strain over time, the second list is the diagonal/cross polarisation.
+    """
+    
+    #input type checking
+    for each_variable in locals():
+        assert type(each_variable) == list, 'All inputs should be lists.'
+        
+    Aorth = np.zeros((len(i_phase)))            #orthogonal/plus polarisation
+    Adiag = np.zeros((len(i_phase)))            #diagonal/cross polarisation
+        
+    for i in range(len(i_phase)):
+        Aorth[i] = A1[i]*np.cos(2*i_phase[i]) + A2[i]*np.sin(2*i_phase[i])
+        Adiag[i] = A1[i]*np.sin(2*i_phase[i]) - A2[i]*np.cos(2*i_phase[i])
+        
+    return [Aorth,Adiag]
+
+def list_size_reducer(reduction_factor,your_list):
+    """
+    Optional function to reduce the size of the lists output by the inspiral
+    functions (not the merger lists, as those are much shorter), in order to
+    reduce filesize to conserve storage space.
+    The typical reduction factor we have used in our research using this code
+    is 100.
+    
+    Parameters
+    ----------
+    reduction_factor: int
+        The factor you want to reduce the list length by.
+    your_list: list
+        The list you want to reduce.
+        
+    Results
+    -------
+    reduced_list: list
+        your_list, in reduced form.
+    """
+    
+    #input type checking
+    assert type(reduction_factor) == int, 'reduction_factor should be an int.'
+    assert type(your_list) == list, ('The thing to be reduced needs to be a '
+                                     'list.')
+    """
+    #initialisation
+    output_lists = np.zeros((len(args)))
+    for i in range(len(args)):
+        output_lists[i] = [0]
+    
+    #for each input list, create output list with every nth point    
+    for i in range(len(args)):
+        output_lists[i][0] = args[i][0]
+        for j in range(reduction_factor,len(args[i]),reduction_factor):
+            output_lists[i].append(args[i][j])
+            
+    return output_lists
+    """
+    
+    #create new list with every nth point of your_list
+    reduced_list = [your_list[0]]
+    for i in range(reduction_factor,len(your_list),reduction_factor):
+        reduced_list.append(your_list[i])
+        
+    return reduced_list
