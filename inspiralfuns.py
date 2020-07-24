@@ -437,8 +437,12 @@ def list_size_reducer(reduction_factor,your_list):
     Optional function to reduce the size of the lists output by the inspiral
     functions (not the merger lists, as those are much shorter), in order to
     reduce filesize to conserve storage space.
+    NOTES:
     The typical reduction factor we have used in our research using this code
     is 100.
+    The inspiral lists used by the matching/merger portions are realtimes,
+    omega, i_phase, Aorth and Adiag, so if you reduce one of these you should
+    reduce all of them.
     
     Parameters
     ----------
