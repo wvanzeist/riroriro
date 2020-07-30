@@ -121,7 +121,8 @@ def fhat_differentiation(fhat):
     Parameters
     ----------
     fhat: list of floats
-        Values of a sort of frequency parameter called fhat (f^) over time.
+        Values of a sort of frequency parameter called fhat (f^) over time,
+        from merger_freq_calculation().
         
     Results
     -------
