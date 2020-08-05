@@ -432,6 +432,35 @@ def inspiral_strain_polarisations(A1,A2,i_phase):
         
     return [Aorth,Adiag]
 
+def inspiral_strain_amplitude(Aorth,Adiag):
+    """
+    Calculating the amplitude of the strain from the polarisations.
+    
+    Parameters
+    ----------
+    Aorth: list of floats
+        The values of the orthogonal/plus polarisation of strain over time,
+        from inspiral_strain_polarisations().
+    Adiag: list of floats
+        The values of the diagonal/cross polarisation of strain over time, from
+        inspiral_strain_polarisations().
+        
+    Results
+    -------
+    i_amp: list of floats
+        The values of the amplitude of the GW strain over time (unitless).
+    """
+    
+    #input type checking
+    assert type(Aorth) == list, 'Aorth should be a list.'
+    assert type(Adiag) == list, 'Adiag should be a list.'
+    
+    i_amp = np.zeros((len(Aorth)))
+    for i in range(len(Aorth)):
+        i_amp[i] = np.sqrt(Aorth[i]**2 + Adiag[i]**2)
+        
+    return i_amp
+
 def list_size_reducer(reduction_factor,your_list):
     """
     Optional function to reduce the size of the lists output by the inspiral
@@ -441,8 +470,8 @@ def list_size_reducer(reduction_factor,your_list):
     The typical reduction factor we have used in our research using this code
     is 100.
     The inspiral lists used by the matching/merger portions are realtimes,
-    omega, i_phase, Aorth and Adiag, so if you reduce one of these you should
-    reduce all of them.
+    omega, i_phase and i_amp so if you reduce one of these you should reduce
+    all of them.
     
     Parameters
     ----------
