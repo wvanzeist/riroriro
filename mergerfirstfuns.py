@@ -10,9 +10,9 @@ import numpy as np
 
 def quasi_normal_modes(eta):
     """
-    Calculation of the quasi-normal mode factor used in the calculation of
-    angular frequency for the merger/ringdown waveform, based on Buskirk et al.
-    (2019) equations 19 and 20.
+    Calculation of the final spin and quasi-normal mode factor used in the
+    calculation of angular frequency for the merger/ringdown waveform, based on
+    Buskirk et al. (2019) equations 19 and 20.
     
     Parameters
     ----------
@@ -22,8 +22,9 @@ def quasi_normal_modes(eta):
     
     Results
     -------
-    wqnm: float
-        Quasi-normal mode factor used in subsequent calculations.
+    (sfin,wqnm): tuple of floats
+        The first constant is the final spin, the second is the quasi-normal
+        mode factor used in subsequent calculations.
     """
     
     #input type checking
@@ -39,9 +40,9 @@ def quasi_normal_modes(eta):
         (4621/276)*eta**4               #final spin; based on Buskirk eq. 20
     wqnm = 1 - 0.63*(1 - sfin)**0.3     #based on Buskirk eq. 19
     
-    return wqnm
+    return (sfin,wqnm)
 
-def gIRS_coefficients(eta):
+def gIRS_coefficients(eta,sfin):
     """
     Calculation of several gIRS (generic implicit rotating source)-related
     coefficients used in the calculation of angular frequency for the merger/
@@ -52,22 +53,29 @@ def gIRS_coefficients(eta):
     eta: float
         Symmetric mass ratio of the binary, can be obtained from
         get_M_and_eta() in inspiralfuns.
+    sfin: float
+        Final spin value, from quasi_normal_modes().
         
     Results
     -------
-    [b,C,kappa]: list of floats
-        Three gIRS-related constants used in subsequent calculations.
+    (alpha,b,C,kappa): tuple of floats
+        Four gIRS-related constants used in subsequent calculations.
+        (NOTE: alpha is not used by anything in mergerfirstfuns but *is* used
+        in mergersecondfuns.)
     """
     
     #input type checking
     assert type(eta) == float, 'eta should be a float.'
+    assert type(sfin) == float, 'sfin should be a float.'
     
     #constants from Buskirk Appendix C
+    Q = 2/((1 - sfin)**0.45)
+    alpha = Q**-2 * (16313/562 + (21345/124)*eta)
     b = 16014/979 - (29132/1343)*eta**2
     C = 206/903 + (180/1141)*np.sqrt(eta) + (424/1205)*eta**2*(1/np.log(eta))
     kappa = 713/1056 - (23/193)*eta
     
-    return [b,C,kappa]
+    return (alpha,b,C,kappa)
 
 def merger_freq_calculation(wqnm,b,C,kappa):
     """
