@@ -255,3 +255,38 @@ def time_frequency_stitching(min_switch_ind,final_i_index,time_offset,i_time,\
         i_m_time.append(min_offset_m_time[i])
         
     return [i_m_time,i_m_omega]
+
+def frequency_SI_units(i_m_omega,M):
+    """
+    The angular frequency in geometric units translated to ordinary/temporal
+    frequency in SI units (Hz). Useful for plotting and also required for the
+    SNR calculator.
+    
+    Parameters
+    ----------
+    i_m_omega: list of floats
+        Values of angular frequency over time for the entire duration of the
+        gravitational waveform, from time_frequency_stitching().
+    M: float
+        Total mass of the binary, can be obtained from get_M_and_eta() in
+        inspiralfuns.
+    
+    Results
+    -------
+    i_m_freq: list of floats
+        Values of frequency in Hz for the entire duration of the gravitational
+        waveform.
+    """
+    
+    #input type checking
+    assert type(i_m_omega) == list, 'i_m_omega should be a list.'
+    assert type(M) == float, 'M should be a float.'
+    
+    pi=np.pi
+    Msuns=4.923e-6                                  #geometric unit conversion
+    
+    i_m_freq = np.zeros((len(i_m_omega)))
+    for i in range(len(i_m_omega)):
+        i_m_freq[i] = i_m_omega[i] / (M*Msuns*pi)
+        
+    return i_m_freq
