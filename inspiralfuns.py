@@ -248,7 +248,10 @@ def inspiral_time_conversion(xtimes,M):
     realtimes = np.zeros((len(xtimes)))         #initialisation of list
     for i in range(len(xtimes)):
         realtimes[i] = xtimes[i]*M*Msuns
-        
+    
+    #output type conversion
+    realtimes = list(realtimes)
+    
     return realtimes
 
 def inspiral_phase_freq_integration(x,dt,M):
@@ -297,7 +300,12 @@ def inspiral_phase_freq_integration(x,dt,M):
         omega[i+1] = x[i+1]**1.5
         i_phase[i+1] = i_phase[i] + omega[i+1]*dt[i]
         freq[i+1] = omega[i+1] / (M*Msuns*pi)
-        
+    
+    #output type conversion
+    i_phase = list(i_phase)
+    omega = list(omega)
+    freq = list(freq)
+    
     return [i_phase,omega,freq]
 
 def radius_calculation(x,M,eta):
@@ -342,6 +350,10 @@ def radius_calculation(x,M,eta):
         r[i] = r0pn*(1/x[i]) + r1pn + r2pn*x[i] + r3pn*x[i]**2
         rdot[i] = PNderiv(x[i],M,eta) * (-2*r0pn*x[i]**-2 + r2pn + 2*r3pn*x[i])
         
+    #output type conversion
+    r = list(r)
+    rdot = list(rdot)
+    
     return [r,rdot]
 
 def a1_a2_calculation(r,rdot,omega,D,M,eta):
@@ -392,7 +404,11 @@ def a1_a2_calculation(r,rdot,omega,D,M,eta):
     for i in range(len(r)):                     #based on Buskirk eq. 9
         A1[i] = (-2*M*eta*(1/Dkm))*(rdot[i]**2 + (r[i]*omega[i])**2 + 1/r[i])
         A2[i] = (-2*M*eta*(1/Dkm))*(2*r[i]*rdot[i]*omega[i])
-        
+    
+    #output type conversion
+    A1 = list(A1)
+    A2 = list(A2)
+    
     return [A1,A2]
 
 def inspiral_strain_polarisations(A1,A2,i_phase):
@@ -430,6 +446,10 @@ def inspiral_strain_polarisations(A1,A2,i_phase):
         Aorth[i] = A1[i]*np.cos(2*i_phase[i]) + A2[i]*np.sin(2*i_phase[i])
         Adiag[i] = A1[i]*np.sin(2*i_phase[i]) - A2[i]*np.cos(2*i_phase[i])
         
+    #output type conversion
+    Aorth = list(Aorth)
+    Adiag = list(Adiag)
+    
     return [Aorth,Adiag]
 
 def inspiral_strain_amplitude(Aorth,Adiag):
@@ -459,6 +479,9 @@ def inspiral_strain_amplitude(Aorth,Adiag):
     for i in range(len(Aorth)):
         i_amp[i] = np.sqrt(Aorth[i]**2 + Adiag[i]**2)
         
+    #output type conversion
+    i_amp = list(i_amp)
+    
     return i_amp
 
 def list_size_reducer(reduction_factor,your_list):
