@@ -51,6 +51,9 @@ def merger_phase_calculation(min_switch_ind,final_i_index,i_phase,m_omega):
             m_omega[i]
                                         #Euler integration Buskirk of eq. 21
     
+    #output type conversion
+    m_phase = list(m_phase)
+    
     return m_phase
 
 def phase_stitching(final_i_index,i_phase,m_phase):
@@ -83,6 +86,9 @@ def phase_stitching(final_i_index,i_phase,m_phase):
     assert type(m_phase) == list, 'm_phase should be a list.'
     
     i_m_phase = np.concatenate((i_phase[:final_i_index],m_phase))
+    
+    #output type conversion
+    i_m_phase = list(i_m_phase)
     
     return i_m_phase
 
@@ -144,6 +150,9 @@ def merger_strain_amplitude(min_switch_ind,final_i_index,alpha,i_amp,m_omega,\
         m_amp[i] = scaling_ratio * m_amp[i]
         #rescaling for continuity between inspiral and merger/ringdown
         
+    #output type conversion
+    m_amp = list(m_amp)
+    
     return m_amp
 
 def amplitude_stitching(final_i_index,i_amp,m_amp):
@@ -176,5 +185,8 @@ def amplitude_stitching(final_i_index,i_amp,m_amp):
     assert type(m_amp) == list, 'm_amp should be a list.'
     
     i_m_amp = np.concatenate((i_amp[:final_i_index],m_amp))
+    
+    #output type conversion
+    i_m_amp = list(i_m_amp)
     
     return i_m_amp
