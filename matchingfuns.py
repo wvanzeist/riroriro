@@ -288,5 +288,8 @@ def frequency_SI_units(i_m_omega,M):
     i_m_freq = np.zeros((len(i_m_omega)))
     for i in range(len(i_m_omega)):
         i_m_freq[i] = i_m_omega[i] / (M*Msuns*pi)
-        
+    
+    #output type conversion
+    i_m_freq = list(i_m_freq)
+    
     return i_m_freq
