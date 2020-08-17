@@ -119,6 +119,10 @@ def merger_freq_calculation(wqnm,b,C,kappa):
         #based on Buskirk eq. 18, with 0.5 to standardise weird angle
         #definitions in Buskirk paper
         
+    #output type conversion
+    fhat = list(fhat)
+    m_omega = list(m_omega)
+        
     return [fhat,m_omega]
 
 def fhat_differentiation(fhat):
@@ -151,6 +155,9 @@ def fhat_differentiation(fhat):
     for i in range(1,200):              #derivative approximated as differences
         fhatdot[i] = 0.5*(fhat[i+1] - fhat[i-1])
         
+    #output type conversion
+    fhatdot = list(fhatdot)
+    
     return fhatdot
 
 def merger_time_conversion(M):
@@ -182,4 +189,7 @@ def merger_time_conversion(M):
     for i in range(201):
         m_time[i] = time[i]*M*Msuns
         
+    #output type conversion
+    m_time = list(m_time)
+    
     return m_time
