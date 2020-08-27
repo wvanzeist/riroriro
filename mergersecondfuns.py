@@ -29,7 +29,7 @@ def merger_phase_calculation(min_switch_ind,final_i_index,i_phase,m_omega):
         Values of angular frequency over time for the merger/ringdown portion,
         from merger_freq_calculation() in mergerfirstfuns.
         
-    Results
+    Returns
     -------
     m_phase: list of floats
         Values of orbital phase over time for the merger/ringdown portion.
@@ -73,7 +73,7 @@ def phase_stitching(final_i_index,i_phase,m_phase):
         Values of orbital phase over time for the merger/ringdown portion, from
         merger_phase_calculation().
         
-    Results
+    Returns
     -------
     i_m_phase: list of floats
         Values of orbital phase over time for the entire duration of the
@@ -122,7 +122,7 @@ def merger_strain_amplitude(min_switch_ind,final_i_index,alpha,i_amp,m_omega,\
         Values of the time-derivative of fhat over time, from
         fhat_differentiation() in mergerfirstfuns.
         
-    Results
+    Returns
     -------
     m_amp: list of floats
         The values of the amplitude of the GW strain over time for the
@@ -172,7 +172,7 @@ def amplitude_stitching(final_i_index,i_amp,m_amp):
         The values of the amplitude of the GW strain over time for the
         merger/ringdown portion, from merger_strain_amplitude().
         
-    Results
+    Returns
     -------
     i_m_amp: list of floats
         The values of the amplitude of the GW strain over time for the entire

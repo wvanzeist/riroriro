@@ -31,7 +31,7 @@ def waveform_exporter(time,freq,amp,path):
         The file path to the location/document where you want to save the
         simulated gravitational waveform data.
         
-    Results
+    Returns
     -------
     An output file containing an array wherein the first column is the time,
     the second is the frequency and the third is the amplitude.
@@ -55,7 +55,7 @@ def waveform_exporter(time,freq,amp,path):
         
     #saving exportarray to a file
     np.savetxt(path,exportarray,delimiter='\t',newline='\n')
-
+    
 def waveform_arrayer(time,freq,amp):
     """
     Function to collate important data of the simulated gravitational waveform
@@ -80,7 +80,7 @@ def waveform_arrayer(time,freq,amp):
         or NS-NS merger, use i_amp from inspiral_strain_amplitude in
         inspiralfuns.
         
-    Results
+    Returns
     -------
     exportarray: numpy.ndarray
         An array containing the important data of the simulated gravitational

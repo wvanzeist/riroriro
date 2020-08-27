@@ -33,7 +33,7 @@ def MQdiff(i,i_time,i_omega,m_time,m_omega):
         Values of angular frequency over time for the merger/ringdown portion,
         from merger_freq_calculation() in mergerfirstfuns.
         
-    Results
+    Returns
     -------
     df_diff: float (or nan)
         A value describing the difference in gradient of frequency between the
@@ -92,7 +92,7 @@ def min_switch_ind_finder(i_time,i_omega,m_time,m_omega):
         Values of angular frequency over time for the merger/ringdown portion,
         from merger_freq_calculation() in mergerfirstfuns.
         
-    Results
+    Returns
     -------
     min_switch_ind: int
         The index in the merger/ringdown data where the switch from inspiral to
@@ -138,7 +138,7 @@ def final_i_index_finder(min_switch_ind,i_omega,m_omega):
         Values of angular frequency over time for the merger/ringdown portion,
         from merger_freq_calculation() in mergerfirstfuns.
         
-    Results
+    Returns
     -------
     final_i_index: int
         The last index in the inspiral data before the switch to the merger/
@@ -175,7 +175,7 @@ def time_offset_finder(min_switch_ind,final_i_index,i_time,m_time):
         Real time values for the merger/ringdown portion, from
         merger_time_conversion() in mergerfirstfuns.
         
-    Results
+    Returns
     -------
     time_offset: float
         The offset between the time values of the inspiral and merger/ringdown
@@ -223,7 +223,7 @@ def time_frequency_stitching(min_switch_ind,final_i_index,time_offset,i_time,\
         Values of angular frequency over time for the merger/ringdown portion,
         from merger_freq_calculation() in mergerfirstfuns.
         
-    Results
+    Returns
     -------
     [i_m_time,i_m_omega]: list of lists of floats
         The first list is the combined time values, the second list is the
@@ -271,7 +271,7 @@ def frequency_SI_units(i_m_omega,M):
         Total mass of the binary, can be obtained from get_M_and_eta() in
         inspiralfuns.
     
-    Results
+    Returns
     -------
     i_m_freq: list of floats
         Values of frequency in Hz for the entire duration of the gravitational
@@ -288,8 +288,8 @@ def frequency_SI_units(i_m_omega,M):
     i_m_freq = np.zeros((len(i_m_omega)))
     for i in range(len(i_m_omega)):
         i_m_freq[i] = i_m_omega[i] / (M*Msuns*pi)
-    
+        
     #output type conversion
     i_m_freq = list(i_m_freq)
-    
+        
     return i_m_freq
