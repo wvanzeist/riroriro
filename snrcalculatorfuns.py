@@ -17,7 +17,7 @@ def polynomial_redshift(d):
     d: float
         A luminosity distance, in Mpc.
         
-    Results
+    Returns
     -------
     z: float
         The redshift corresponding to the input distance.
@@ -49,7 +49,7 @@ def redshift_distance_adjustment(inputarray,d,z):
     z: float
         The redshift corresponding to the input distance.
         
-    Results
+    Returns
     -------
     adjustedarray: numpy.ndarray
         inputarray, but with the frequency and amplitudes adjusted.
@@ -72,8 +72,7 @@ def redshift_distance_adjustment(inputarray,d,z):
 def frequency_limits(inputarray):
     """
     Calculates the upper and lower limits of the frequency of the gravitational
-    waveform in inputarray, which are used by the subsequent noiseratio
-    calculation.
+    waveform in inputarray, which are used by amplitude_interpolation().
     
     Parameters
     ----------
@@ -81,7 +80,7 @@ def frequency_limits(inputarray):
         The time, frequency and amplitude data of the gravitational waveform;
         should have been adjusted by redshift_distance_adjustment().
         
-    Results
+    Returns
     -------
     (freqmax,freqmin): tuple of floats
         The upper and lower limits of the waveform signal frequency,
@@ -95,3 +94,186 @@ def frequency_limits(inputarray):
     freqmin=np.amin(inputarray[:,1])
     
     return (freqmax,freqmin)
+
+def findchirp_fourier(inputarray,findchirp_array,d,z):
+    """
+    Approximation of a Fourier transform on the gravitational waveform data,
+    using the frequency spectrum output by the simpler model FINDCHIRP (Allen
+    et al., 2012) for calibration.
+    NOTE: Should really be replaced by something fft-based.
+    
+    Parameters
+    ----------
+    inputarray: numpy.ndarray
+        The time, frequency and amplitude data of the gravitational waveform;
+        should have been adjusted by redshift_distance_adjustment().
+    findchirp_array: numpy.ndarray
+        The array output by FINDCHIRP. The second column is frequency, the
+        fourth is (Fourier-transformed) strain amplitude, the other columns
+        are irrelevant.
+    d: float
+        The luminosity distance to the merging binary, in Mpc.
+    z: float
+        The redshift corresponding to the input distance.
+        
+    Returns
+    -------
+    fourieramp: list
+        Fourier-transformed/calibrated amplitudes at each frequency value in
+        inputarray.
+    """
+    
+    #input type checking
+    assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
+    assert type(findchirp_array) == np.ndarray, ('findchirp_array should be an'
+                                                 ' array.')
+    assert type(d) == float, 'd should be a float.'
+    assert type(z) == float, 'z should be a float.'
+    
+    #findchirparray scaling and redshifting
+    for i in range(findchirp_array.shape[0]):
+        findchirp_array[i,3] /= d     #calculated assuming 1 Mpc, hence scaling
+        findchirp_array[i,1] /= (1+z) #redshift adjustment for trace
+    
+    #FINDCHIRP-inspired empirical approximation of Fourier transform
+    fourieramp = np.zeros((inputarray.shape[0]))
+    for i in range(len(fourieramp)):
+        fourieramp[i] = (inputarray[i,2]) / (inputarray[i,1]**(11/6))
+                        #*fourier_freq**(5/6)          #* 1.15 (trace scaling)
+                        #11/6 in this version with adjusted traces
+                        
+    #scaling to match Fourier-transformed waveform and FINDCHIRP trace at 10 Hz
+    fourier_10Hz = np.searchsorted(inputarray[:,1],10)
+    trace_10Hz = np.searchsorted(findchirp_array[:,1],10)
+    f_t_ratio = fourieramp[fourier_10Hz] / findchirp_array[trace_10Hz,3]
+    for i in range(len(fourieramp)):
+        fourieramp[i] /= f_t_ratio #scale so amplitudes are equal at 10 Hz
+        
+    #output type conversion
+    fourieramp = list(fourieramp)
+    
+    return fourieramp
+
+def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
+    """
+    The simulated gravitational waveform data and the detector noise spectrum
+    are assumed to have amplitude data at different sets of frequencies, so
+    this function uses scipy's interp1d to calculate the waveform amplitude
+    values at the frequencies used by the detector data.
+    
+    Parameters
+    ----------
+    inputarray: numpy.ndarray
+        The time, frequency and amplitude data of the gravitational waveform;
+        should have been adjusted by redshift_distance_adjustment().
+    fourieramp: list
+        Fourier-transformed/calibrated amplitudes at each frequency value in
+        inputarray, from findchirp_fourier().
+    noisearray: numpy.ndarray
+        Data on the noise spectrum of the detector; it is assumed that
+        frequency values are in the first column and ASD noise levels in the
+        second.
+    freqmax: float
+        The upper limit of the waveform signal frequency, from
+        frequency_limits().
+    freqmin: float
+        The lower limit of the waveform signal frequency, from
+        frequency_limits().
+    
+    Returns
+    -------
+    noise_freq_amp: list
+        Waveform amplitudes as in fourieramp, but over the set of frequencies
+        in noisearray rather than those in inputarray.
+    """
+    
+    from scipy.interpolate import interp1d
+    
+    #input type checking
+    assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
+    assert type(fourieramp) == list, 'fourieramp should be a list.'
+    assert type(noisearray) == np.ndarray, 'noisearray should be an array.'
+    assert type(freqmax) == float, 'freqmax should be a float.'
+    assert type(freqmin) == float, 'freqmin should be a float.'
+    
+    smoothinput = interp1d(inputarray[:,1], fourieramp[:], kind='cubic')
+    #interpolating input frequency-amp curve so it can be calculated for the
+    #other grid of frequencies used by noisearray
+    
+    noise_freq_amp = np.zeros((len(noisearray)))
+    
+    for i in range(len(noise_freq_amp)):
+        if noisearray[i,0] > freqmax or noisearray[i,0] < freqmin:
+            noise_freq_amp[i] = 0
+            #the smoothinput function is only defined between freqmin and
+            #freqmax; this just sets the amplitude to zero outside the actual
+            #simulated range of the waveform
+        else:
+            noise_freq_amp[i] = smoothinput(noisearray[i,0])
+            
+    #output type conversion
+    noise_freq_amp = list(noise_freq_amp)
+    
+    return noise_freq_amp
+
+def individual_detector_SNR(noisearray,noise_freq_amp):
+    """
+    Calculates the single-detector optimal-alignment SNR by comparing the
+    waveform frequency spectrum and detector noise spectrum using the method of
+    Barrett et al. (2018).
+    
+    Parameters
+    ----------
+    noisearray: numpy.ndarray
+        Data on the noise spectrum of the detector; it is assumed that
+        frequency values are in the first column and ASD noise levels in the
+        second.
+    noise_freq_amp: list
+        Amplitudes of the simulated gravitational waveform, over the set of
+        frequencies of noisearray.
+        
+    Returns
+    -------
+    ind_SNR: float
+        The SNR of the simulated gravitational waveform, for the detector in
+        noisearray and assuming optimal alignment.
+    """
+    
+    #input type checking
+    assert type(noisearray) == np.ndarray, 'noisearray should be an array.'
+    assert type(noise_freq_amp) == list, 'noise_freq_amp should be a list.'
+    
+    noiseratio = np.zeros((len(noise_freq_amp)))
+    
+    #h/S part of SNR equation
+    for i in range(len(noiseratio)):
+        noiseratio[i] = (noise_freq_amp[i] / noisearray[i,1])**2
+        #squaring is to convert ASD to PSD and amp to h*(f)h(f)
+        #f to balance ASD units (from noise and from df) is no longer
+        #needed when we have FINDCHIRP-based transform
+        #(the freqmax-freqmin stuff that was here in the original SNR
+        #calculator script is moved to the noise_freq_amp calculation in this
+        #version)
+        
+    SNR_df = np.zeros((len(noise_freq_amp)))
+    
+    #df in SNR equation
+    for i in range(len(SNR_df)):                #derivative as differences
+        #unusual averages at ends (not that these will be relevant here)
+        if i == 0:
+            SNR_df[i] = noisearray[1,0] - noisearray[0,0]
+        elif i == noisearray.shape[0] - 1:              #final value in array
+            SNR_df[i] = noisearray[i,0] - noisearray[i-1,0]
+            #regular averages, based on those used in fhatdot calculation
+        else:
+            SNR_df[i] = 0.5*(noisearray[i+1,0] - noisearray[i-1,0])
+    
+    #integrating over frequency as Riemann sum
+    sumpart = np.zeros(noisearray.shape[0])             #slices of SNR integral
+    for i in range(len(sumpart)):
+        sumpart[i] = noiseratio[i]*SNR_df[i]
+    
+    #final part of Barrett et al. calculation
+    ind_SNR = np.sqrt(4*sum(sumpart))
+    
+    return ind_SNR
