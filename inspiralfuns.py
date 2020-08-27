@@ -269,7 +269,7 @@ def inspiral_phase_freq_integration(x,dt,M):
     M: float
         Total mass of the binary, can be obtained from get_M_and_eta().
         
-    Results
+    Returns
     -------
     [i_phase,omega,freq]: list of lists of floats
         First list is the values of orbital phase at each timestep, second list
@@ -324,7 +324,7 @@ def radius_calculation(x,M,eta):
         Symmetric mass ratio of the binary, can be obtained from
         get_M_and_eta().
         
-    Results
+    Returns
     -------
     [r,rdot]: list of lists of floats
         First list is the values of the orbital radius (in geometric units) at
@@ -381,7 +381,7 @@ def a1_a2_calculation(r,rdot,omega,D,M,eta):
         Symmetric mass ratio of the binary, can be obtained from
         get_M_and_eta().
         
-    Results
+    Returns
     -------
     [A1,A2]: list of lists of floats
         The first list is the values  of the A1 parameter used in strain
@@ -428,7 +428,7 @@ def inspiral_strain_polarisations(A1,A2,i_phase):
         Values of the orbital phase at each timestep, from
         inspiral_phase_freq_integration().
         
-    Results
+    Returns
     -------
     [Aorth,Adiag]: list of lists of floats
         The first list is the values of the orthogonal/plus polarisation of
@@ -465,7 +465,7 @@ def inspiral_strain_amplitude(Aorth,Adiag):
         The values of the diagonal/cross polarisation of strain over time, from
         inspiral_strain_polarisations().
         
-    Results
+    Returns
     -------
     i_amp: list of floats
         The values of the amplitude of the GW strain over time (unitless).
@@ -503,7 +503,7 @@ def list_size_reducer(reduction_factor,your_list):
     your_list: list
         The list you want to reduce.
         
-    Results
+    Returns
     -------
     reduced_list: list
         your_list, in reduced form.
