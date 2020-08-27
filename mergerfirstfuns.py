@@ -20,7 +20,7 @@ def quasi_normal_modes(eta):
         Symmetric mass ratio of the binary, can be obtained from
         get_M_and_eta() in inspiralfuns.
     
-    Results
+    Returns
     -------
     (sfin,wqnm): tuple of floats
         The first constant is the final spin, the second is the quasi-normal
@@ -56,7 +56,7 @@ def gIRS_coefficients(eta,sfin):
     sfin: float
         Final spin value, from quasi_normal_modes().
         
-    Results
+    Returns
     -------
     (alpha,b,C,kappa): tuple of floats
         Four gIRS-related constants used in subsequent calculations.
@@ -93,7 +93,7 @@ def merger_freq_calculation(wqnm,b,C,kappa):
     kappa: float
         A gIRS coefficient, from gIRS_coefficients().
     
-    Results
+    Returns
     -------
     [fhat,m_omega]: list of lists of floats
         First list is the values over time of a sort of frequency parameter
@@ -136,7 +136,7 @@ def fhat_differentiation(fhat):
         Values of a sort of frequency parameter called fhat (f^) over time,
         from merger_freq_calculation().
         
-    Results
+    Returns
     -------
     fhatdot: list of floats
         Values of the time-derivative of fhat over time.
@@ -171,7 +171,7 @@ def merger_time_conversion(M):
         Total mass of the binary, can be obtained from get_M_and_eta() in
         inspiralfuns.
         
-    Results
+    Returns
     -------
     m_time: list of floats
         The list of timesteps used by other merger/ringdown functions, but in
