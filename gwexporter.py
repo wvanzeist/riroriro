@@ -89,7 +89,7 @@ def waveform_arrayer(time,freq,amp):
     """
     
     #input type checking
-    for each_variable in locals():
+    for each_variable in locals().values():
         assert type(each_variable) == list, 'All inputs should be lists.'
     
     #checking the lists all have the same length

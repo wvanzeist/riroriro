@@ -100,7 +100,7 @@ def min_switch_ind_finder(i_time,i_omega,m_time,m_omega):
     """
     
     #input type checking
-    for each_variable in locals():
+    for each_variable in locals().values():
         assert type(each_variable) == list, 'All inputs should be lists.'
         
     minMQ = 1000                                    #deliberately overly high

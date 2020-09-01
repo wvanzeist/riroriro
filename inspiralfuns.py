@@ -202,7 +202,7 @@ def x_integration(start,end,M,eta):
     """
     
     #input type checking
-    for each_variable in locals():
+    for each_variable in locals().values():
         assert type(each_variable) == float, 'All inputs should be floats.'
     
     dt=[]                                       #holds the timestep
@@ -436,7 +436,7 @@ def inspiral_strain_polarisations(A1,A2,i_phase):
     """
     
     #input type checking
-    for each_variable in locals():
+    for each_variable in locals().values():
         assert type(each_variable) == list, 'All inputs should be lists.'
         
     Aorth = np.zeros((len(i_phase)))            #orthogonal/plus polarisation

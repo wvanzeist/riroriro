@@ -101,7 +101,7 @@ def merger_freq_calculation(wqnm,b,C,kappa):
     """
     
     #input type checking
-    for each_variable in locals():
+    for each_variable in locals().values():
         assert type(each_variable) == float, 'All inputs should be floats.'
     
     #time in geometric units    
