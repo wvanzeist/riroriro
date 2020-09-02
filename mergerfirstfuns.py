@@ -38,6 +38,7 @@ def quasi_normal_modes(eta):
     
     sfin = 2*np.sqrt(3)*eta - (390/79)*eta**2 + (2379/287)*eta**3 - \
         (4621/276)*eta**4               #final spin; based on Buskirk eq. 20
+    sfin = float(sfin)                  #becomes numpy.float64 otherwise
     wqnm = 1 - 0.63*(1 - sfin)**0.3     #based on Buskirk eq. 19
     
     return (sfin,wqnm)
@@ -74,6 +75,9 @@ def gIRS_coefficients(eta,sfin):
     b = 16014/979 - (29132/1343)*eta**2
     C = 206/903 + (180/1141)*np.sqrt(eta) + (424/1205)*eta**2*(1/np.log(eta))
     kappa = 713/1056 - (23/193)*eta
+    
+    #output type conversion
+    C = float(C)
     
     return (alpha,b,C,kappa)
 
