@@ -153,6 +153,9 @@ def final_i_index_finder(min_switch_ind,i_omega,m_omega):
     final_i_index = np.searchsorted(i_omega, m_omega[min_switch_ind], \
                                     side='right')
     
+    #output type conversion
+    final_i_index = int(final_i_index)    
+    
     return final_i_index
 
 def time_offset_finder(min_switch_ind,final_i_index,i_time,m_time):
@@ -189,6 +192,9 @@ def time_offset_finder(min_switch_ind,final_i_index,i_time,m_time):
     assert type(m_time) == list, 'm_time should be a list.'
     
     time_offset = i_time[final_i_index] - m_time[min_switch_ind]
+    
+    #output type conversion
+    time_offset = float(time_offset)
     
     return time_offset
 
