@@ -41,7 +41,7 @@ def merger_phase_calculation(min_switch_ind,final_i_index,i_phase,m_omega):
     assert type(i_phase) == list, 'i_phase should be a list.'
     assert type(m_omega) == list, 'm_omega should be a list.'
     
-    m_phase = np.zeros((201 - min_switch_ind))
+    m_phase = np.empty((201 - min_switch_ind))
     #starts at min_switch_ind instead of 0 because the part of the
     #merger/ringdown data before that gets cut off by the matching
     m_phase[0] = i_phase[final_i_index]
@@ -138,7 +138,7 @@ def merger_strain_amplitude(min_switch_ind,final_i_index,alpha,i_amp,m_omega,\
     assert type(fhat) == list, 'fhat should be a list.'
     assert type(fhatdot) == list, 'fhatdot should be a list.'
     
-    m_amp = np.zeros((201 - min_switch_ind))
+    m_amp = np.empty((201 - min_switch_ind))
     for i in range(min_switch_ind,201):         #initial unscaled calculation
         m_amp[i - min_switch_ind] = (1/(2e0*m_omega[i])) * ((abs(fhatdot[i]))/\
              (1 + alpha*(fhat[i]**2 - fhat[i]**4)))**(1/2)

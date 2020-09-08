@@ -47,7 +47,7 @@ def waveform_exporter(time,freq,amp,path):
     assert len(time) == len(freq) == len(amp), ('The three lists all need to '
                                                 'have the same length.')
     
-    exportarray = np.zeros((len(time),3))
+    exportarray = np.empty((len(time),3))
     for i in range(len(time)):
         exportarray[i,0] = time[i]
         exportarray[i,1] = freq[i]
@@ -96,7 +96,7 @@ def waveform_arrayer(time,freq,amp):
     assert len(time) == len(freq) == len(amp), ('The three lists all need to '
                                                 'have the same length.')
     
-    exportarray = np.zeros((len(time),3))
+    exportarray = np.empty((len(time),3))
     for i in range(len(time)):
         exportarray[i,0] = time[i]
         exportarray[i,1] = freq[i]

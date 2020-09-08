@@ -136,7 +136,7 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
         findchirp_array[i,1] /= (1+z) #redshift adjustment for trace
     
     #FINDCHIRP-inspired empirical approximation of Fourier transform
-    fourieramp = np.zeros((inputarray.shape[0]))
+    fourieramp = np.empty((inputarray.shape[0]))
     for i in range(len(fourieramp)):
         fourieramp[i] = (inputarray[i,2]) / (inputarray[i,1]**(11/6))
                         #*fourier_freq**(5/6)          #* 1.15 (trace scaling)
@@ -200,7 +200,7 @@ def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
     #interpolating input frequency-amp curve so it can be calculated for the
     #other grid of frequencies used by noisearray
     
-    noise_freq_amp = np.zeros((len(noisearray)))
+    noise_freq_amp = np.empty((len(noisearray)))
     
     for i in range(len(noise_freq_amp)):
         if noisearray[i,0] > freqmax or noisearray[i,0] < freqmin:
@@ -230,7 +230,7 @@ def individual_detector_SNR(noisearray,noise_freq_amp):
         second.
     noise_freq_amp: list
         Amplitudes of the simulated gravitational waveform, over the set of
-        frequencies of noisearray.
+        frequencies of noisearray, from amplitude_interpolation().
         
     Returns
     -------
@@ -243,7 +243,7 @@ def individual_detector_SNR(noisearray,noise_freq_amp):
     assert type(noisearray) == np.ndarray, 'noisearray should be an array.'
     assert type(noise_freq_amp) == list, 'noise_freq_amp should be a list.'
     
-    noiseratio = np.zeros((len(noise_freq_amp)))
+    noiseratio = np.empty((len(noise_freq_amp)))
     
     #h/S part of SNR equation
     for i in range(len(noiseratio)):
@@ -255,7 +255,7 @@ def individual_detector_SNR(noisearray,noise_freq_amp):
         #calculator script is moved to the noise_freq_amp calculation in this
         #version)
         
-    SNR_df = np.zeros((len(noise_freq_amp)))
+    SNR_df = np.empty((len(noise_freq_amp)))
     
     #df in SNR equation
     for i in range(len(SNR_df)):                #derivative as differences
@@ -269,7 +269,7 @@ def individual_detector_SNR(noisearray,noise_freq_amp):
             SNR_df[i] = 0.5*(noisearray[i+1,0] - noisearray[i-1,0])
     
     #integrating over frequency as Riemann sum
-    sumpart = np.zeros(noisearray.shape[0])             #slices of SNR integral
+    sumpart = np.empty(noisearray.shape[0])             #slices of SNR integral
     for i in range(len(sumpart)):
         sumpart[i] = noiseratio[i]*SNR_df[i]
     

@@ -109,12 +109,12 @@ def merger_freq_calculation(wqnm,b,C,kappa):
         assert type(each_variable) == float, 'All inputs should be floats.'
     
     #time in geometric units    
-    time = np.zeros((201))    #can't set it directly as range because of typing
+    time = np.empty((201))    #can't set it directly as range because of typing
     for i in range(201):
         time[i] = range(-100,101)[i]
         
-    fhat = np.zeros((201))
-    m_omega = np.zeros((201))
+    fhat = np.empty((201))
+    m_omega = np.empty((201))
     for i in range(201):
         fhat[i] = (C/2) * (1 + 1/kappa)**(1 + kappa) * (1 - (1 + \
             (1/kappa)*np.exp(-2*time[i]*(1/b)))**-kappa)
@@ -152,7 +152,7 @@ def fhat_differentiation(fhat):
     #making sure fhat has the correct length, to avoid IndexErrors
     assert len(fhat) == 201, 'fhat should have length 201.'
     
-    fhatdot = np.zeros((201))
+    fhatdot = np.empty((201))
     #unusual averages at ends
     fhatdot[0] = fhat[1] - fhat[0]
     fhatdot[200] = fhat[200] - fhat[199]
@@ -189,7 +189,7 @@ def merger_time_conversion(M):
     Msuns=4.923e-6
     
     time = range(-100,101)                          #time in geometric units
-    m_time = np.zeros((201))                        #time in s (initialisation)
+    m_time = np.empty((201))                        #time in s (initialisation)
     for i in range(201):
         m_time[i] = time[i]*M*Msuns
         

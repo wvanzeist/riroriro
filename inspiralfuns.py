@@ -245,7 +245,7 @@ def inspiral_time_conversion(xtimes,M):
     #geometric unit conversion
     Msuns=4.923e-6
     
-    realtimes = np.zeros((len(xtimes)))         #initialisation of list
+    realtimes = np.empty((len(xtimes)))         #initialisation of list
     for i in range(len(xtimes)):
         realtimes[i] = xtimes[i]*M*Msuns
     
@@ -286,11 +286,12 @@ def inspiral_phase_freq_integration(x,dt,M):
     #geometric unit conversion
     Msuns=4.923e-6
     
-    i_phase = np.zeros((len(x)))                #orbital phase
-    omega = np.zeros((len(x)))                  #angular frequency
-    freq = np.zeros((len(x)))                   #frequency
+    i_phase = np.empty((len(x)))                #orbital phase
+    omega = np.empty((len(x)))                  #angular frequency
+    freq = np.empty((len(x)))                   #frequency
     
     #initial values
+    i_phase[0]=0
     omega[0]=x[0]**1.5
     freq[0]=omega[0]/(M*Msuns)
     
@@ -343,8 +344,8 @@ def radius_calculation(x,M,eta):
     r2pn = 4.75*eta + 0.111111*eta**2
     r3pn = -7.51822*eta - 3.08333*eta**2 + 0.0246914*eta**3
     
-    r = np.zeros((len(x)))                      #orbital radius (geometric u.)
-    rdot = np.zeros((len(x)))                   #derivative of radius
+    r = np.empty((len(x)))                      #orbital radius (geometric u.)
+    rdot = np.empty((len(x)))                   #derivative of radius
     
     for i in range(len(x)):                     #Buskirk radius equations
         r[i] = r0pn*(1/x[i]) + r1pn + r2pn*x[i] + r3pn*x[i]**2
@@ -398,8 +399,8 @@ def a1_a2_calculation(r,rdot,omega,D,M,eta):
     
     Dkm = D * 3.086e19                          #conversion from Mpc to km
     
-    A1 = np.zeros((len(r)))
-    A2 = np.zeros((len(r)))
+    A1 = np.empty((len(r)))
+    A2 = np.empty((len(r)))
     
     for i in range(len(r)):                     #based on Buskirk eq. 9
         A1[i] = (-2*M*eta*(1/Dkm))*(rdot[i]**2 + (r[i]*omega[i])**2 + 1/r[i])
@@ -439,8 +440,8 @@ def inspiral_strain_polarisations(A1,A2,i_phase):
     for each_variable in locals().values():
         assert type(each_variable) == list, 'All inputs should be lists.'
         
-    Aorth = np.zeros((len(i_phase)))            #orthogonal/plus polarisation
-    Adiag = np.zeros((len(i_phase)))            #diagonal/cross polarisation
+    Aorth = np.empty((len(i_phase)))            #orthogonal/plus polarisation
+    Adiag = np.empty((len(i_phase)))            #diagonal/cross polarisation
         
     for i in range(len(i_phase)):
         Aorth[i] = A1[i]*np.cos(2*i_phase[i]) + A2[i]*np.sin(2*i_phase[i])
@@ -475,7 +476,7 @@ def inspiral_strain_amplitude(Aorth,Adiag):
     assert type(Aorth) == list, 'Aorth should be a list.'
     assert type(Adiag) == list, 'Adiag should be a list.'
     
-    i_amp = np.zeros((len(Aorth)))
+    i_amp = np.empty((len(Aorth)))
     for i in range(len(Aorth)):
         i_amp[i] = np.sqrt(Aorth[i]**2 + Adiag[i]**2)
         

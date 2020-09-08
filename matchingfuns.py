@@ -245,7 +245,7 @@ def time_frequency_stitching(min_switch_ind,final_i_index,time_offset,i_time,\
     assert type(m_time) == list, 'm_time should be a list.'
     assert type(m_omega) == list, 'm_omega should be a list.'
     
-    min_offset_m_time = np.zeros((len(m_time)))
+    min_offset_m_time = np.empty((len(m_time)))
     for i in range(len(m_time)):                    #offsetting to match i_time
         min_offset_m_time[i] = m_time[i] + time_offset
         
@@ -291,7 +291,7 @@ def frequency_SI_units(i_m_omega,M):
     pi=np.pi
     Msuns=4.923e-6                                  #geometric unit conversion
     
-    i_m_freq = np.zeros((len(i_m_omega)))
+    i_m_freq = np.empty((len(i_m_omega)))
     for i in range(len(i_m_omega)):
         i_m_freq[i] = i_m_omega[i] / (M*Msuns*pi)
         
