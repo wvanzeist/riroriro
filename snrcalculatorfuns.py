@@ -93,6 +93,10 @@ def frequency_limits(inputarray):
     freqmax=np.amax(inputarray[:,1])
     freqmin=np.amin(inputarray[:,1])
     
+    #output type conversion
+    freqmax=float(freqmax)
+    freqmin=float(freqmin)
+    
     return (freqmax,freqmin)
 
 def findchirp_fourier(inputarray,findchirp_array,d,z):
