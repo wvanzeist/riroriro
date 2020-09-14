@@ -161,47 +161,6 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
     
     return fourieramp
 
-def proper_fourier(inputarray):
-    """
-    Fourier transform of the gravitational wave amplitudes to the frequencies,
-    using a fft function.
-    NOTE: This function is intended to replace findchirp_fourier(). It requires
-    the version of inputarray that has the strain polarisations.
-    
-    Parameters
-    ----------
-    inputarray: numpy.ndarray
-        The time, frequency and strain polarisation data of the gravitational
-        waveform; should have been adjusted by redshift_distance_adjustment().
-        
-    Returns
-    -------
-    fourieramp: list
-        Fourier-transformed/calibrated amplitudes at each frequency value in
-        inputarray.
-    """
-    
-    import scipy.signal as signal
-    
-    #input type checking
-    assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
-    
-    #rectangular = np.empty((len(inputarray)))   #rectangularised signal
-    #for i in range(len(rectangular)):
-    #    rectangular[i] = inputarray[i,2] * np.exp(1j*2*np.pi*inputarray[i,1])
-    
-    #complex amplitude (combining polarisations) to be fft input
-    fourierinput = np.empty((len(inputarray)))
-    for i in range(len(fourierinput)):
-        fourierinput[i] = inputarray[i,2] - 1j*inputarray[i,3]
-        
-    #we cannot use a normal fft here because the measurements are not evenly
-    #spaced in time; we use the alternative Lomb-Scargle method instead
-    fourieramp = signal.lombscargle(inputarray[:,0],fourierinput, \
-                                    inputarray[:,1])
-    
-    return fourieramp
-
 def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
     """
     The simulated gravitational waveform data and the detector noise spectrum
