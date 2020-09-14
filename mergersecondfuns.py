@@ -236,6 +236,9 @@ def polarisation_stitching(final_i_index,i_Aorth,i_Adiag,m_Aorth,m_Adiag):
     """
     Stitching together the inspiral and merger/ringdown portions of the
     polarisation lists to give combined lists with the correct matching.
+    NOTE: This (and/or merger_polarisations) needs reworking as there is a
+    jump in the polarisatons at the inspiral-merger transition using this
+    version.
     
     Parameters
     ----------
