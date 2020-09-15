@@ -43,8 +43,7 @@ def redshift_distance_adjustment(inputarray,d,z):
     ----------
     inputarray: numpy.ndarray
         The time, frequency and amplitude data of the gravitational waveform,
-        in the format used by either waveform_exporter_3col() or
-        waveform_exporter_4col() in gwexporter.
+        in the format used by waveform_exporter() in gwexporter.
     d: float
         The luminosity distance to the merging binary, in Mpc.
     z: float
@@ -67,8 +66,6 @@ def redshift_distance_adjustment(inputarray,d,z):
         adjustedarray[i,0] = inputarray[i,0]
         adjustedarray[i,1] = inputarray[i,1] / (1+z)    #frequency redshifting
         adjustedarray[i,2] = inputarray[i,2] / (d/100)  #distance adjustment
-        if inputarray.shape[1] == 4:                #with both polarisations
-            adjustedarray[i,3] = inputarray[i,3] / (d/100)
         
     return adjustedarray
 
