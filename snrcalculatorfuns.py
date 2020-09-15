@@ -43,7 +43,8 @@ def redshift_distance_adjustment(inputarray,d,z):
     ----------
     inputarray: numpy.ndarray
         The time, frequency and amplitude data of the gravitational waveform,
-        in the format used by waveform_exporter() in gwexporter.
+        in the format used by either waveform_exporter_3col() or
+        waveform_exporter_4col() in gwexporter.
     d: float
         The luminosity distance to the merging binary, in Mpc.
     z: float
@@ -66,6 +67,8 @@ def redshift_distance_adjustment(inputarray,d,z):
         adjustedarray[i,0] = inputarray[i,0]
         adjustedarray[i,1] = inputarray[i,1] / (1+z)    #frequency redshifting
         adjustedarray[i,2] = inputarray[i,2] / (d/100)  #distance adjustment
+        if inputarray.shape[1] == 4:                #with both polarisations
+            adjustedarray[i,3] = inputarray[i,3] / (d/100)
         
     return adjustedarray
 
@@ -155,6 +158,43 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
         
     #output type conversion
     fourieramp = list(fourieramp)
+    
+    return fourieramp
+
+def proper_fourier(inputarray):
+    """
+    Fourier transform of the gravitational wave amplitudes to the frequencies,
+    using a fft function.
+    NOTE: This function is intended to replace findchirp_fourier(). It requires
+    the version of inputarray that has the strain polarisations.
+    
+    Parameters
+    ----------
+    inputarray: numpy.ndarray
+        The time, frequency and strain polarisation data of the gravitational
+        waveform; should have been adjusted by redshift_distance_adjustment().
+        
+    Returns
+    -------
+    fourieramp: list
+        Fourier-transformed/calibrated amplitudes at each frequency value in
+        inputarray.
+    """
+    
+    import scipy.signal as signal
+    
+    #input type checking
+    assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
+    
+    #complex amplitude (combining polarisations) to be fft input
+    fourierinput = np.empty((len(inputarray)))
+    for i in range(len(fourierinput)):
+        fourierinput[i] = inputarray[i,2] - 1j*inputarray[i,3]
+        
+    #we cannot use a normal fft here because the measurements are not evenly
+    #spaced in time; we use the alternative Lomb-Scargle method instead
+    fourieramp = signal.lombscargle(inputarray[:,0],fourierinput, \
+                                    inputarray[:,1])
     
     return fourieramp
 
