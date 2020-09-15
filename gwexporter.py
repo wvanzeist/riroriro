@@ -55,6 +55,7 @@ def waveform_exporter(time,freq,amp,path):
         
     #saving exportarray to a file
     np.savetxt(path,exportarray,delimiter='\t',newline='\n')
+    print('Data saved to %s' % path)
     
 def waveform_arrayer(time,freq,amp):
     """
