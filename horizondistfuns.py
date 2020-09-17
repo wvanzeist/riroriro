@@ -63,6 +63,7 @@ def compact_SNR_calculation(inputarray,findchirp_array,noisearray_list,method,\
     
     if method == 'quad':                #quadrature SNR
         final_SNR = np.sqrt(sum(i*i for i in ind_SNR)) #sqrt of sum of squares
+        final_SNR = float(final_SNR)    #becomes numpy.float64 otherwise
     elif method == 'mean':              #mean-of-individual SNR
         final_SNR = sum(ind_SNR)/len(ind_SNR)
     else:
