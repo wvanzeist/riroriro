@@ -36,7 +36,7 @@ def cdf_generator(N=10**6):
     
     pi=np.pi
     
-    Theta_dist=np.zeros((N))
+    Theta_dist=np.empty((N))
     for i in range(N):
         psi=random()*pi
         phi=random()*pi
