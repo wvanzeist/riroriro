@@ -187,7 +187,7 @@ def proper_fourier(inputarray):
     assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
     
     #complex amplitude (combining polarisations) to be fft input
-    fourierinput = np.empty((len(inputarray)))
+    fourierinput = np.empty((len(inputarray)),dtype=complex)
     for i in range(len(fourierinput)):
         fourierinput[i] = inputarray[i,2] - 1j*inputarray[i,3]
         
