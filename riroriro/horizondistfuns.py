@@ -114,7 +114,7 @@ def horizon_distance_calculation(inputarray,findchirp_array,noisearray_list,\
     #initialising calculation thresholds
     horizon_SNR = 8                         #minimum observable SNR
     SNR_accuracy = 0.01                 #how close to SNR we call satisfactory
-    dist = 10                               #low starting distance in Mpc
+    dist = 10.0                             #low starting distance in Mpc
     check_SNR = []                          #used for comparing to thresholds
     
     #initial order of magnitude estimating loop
