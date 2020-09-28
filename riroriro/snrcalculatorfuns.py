@@ -135,9 +135,14 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
     assert type(z) == float, 'z should be a float.'
     
     #findchirparray scaling and redshifting
+    adj_findchirp_array = np.empty((findchirp_array.shape))
     for i in range(findchirp_array.shape[0]):
-        findchirp_array[i,3] /= d     #calculated assuming 1 Mpc, hence scaling
-        findchirp_array[i,1] /= (1+z) #redshift adjustment for trace
+        adj_findchirp_array[i,0] = findchirp_array[i,0]
+        adj_findchirp_array[i,1] = findchirp_array[i,1]/(1+z)
+        #redshift adjustment for trace
+        adj_findchirp_array[i,2] = findchirp_array[i,2]
+        adj_findchirp_array[i,3] = findchirp_array[i,3]/d
+        #calculated assuming 1 Mpc, hence scaling
     
     #FINDCHIRP-inspired empirical approximation of Fourier transform
     fourieramp = np.empty((inputarray.shape[0]))
@@ -148,8 +153,8 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
                         
     #scaling to match Fourier-transformed waveform and FINDCHIRP trace at 10 Hz
     fourier_10Hz = np.searchsorted(inputarray[:,1],10)
-    trace_10Hz = np.searchsorted(findchirp_array[:,1],10)
-    f_t_ratio = fourieramp[fourier_10Hz] / findchirp_array[trace_10Hz,3]
+    trace_10Hz = np.searchsorted(adj_findchirp_array[:,1],10)
+    f_t_ratio = fourieramp[fourier_10Hz] / adj_findchirp_array[trace_10Hz,3]
     for i in range(len(fourieramp)):
         fourieramp[i] /= f_t_ratio #scale so amplitudes are equal at 10 Hz
         

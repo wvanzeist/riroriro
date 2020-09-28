@@ -49,15 +49,14 @@ def compact_SNR_calculation(inputarray,findchirp_array,noisearray_list,method,\
     #horizon_distance_calculation) already include them
     
     z = snr.polynomial_redshift(d)
-    inputarray = snr.redshift_distance_adjustment(inputarray,d,z)
-                                                        #note self-reference
-    freqmax, freqmin = snr.frequency_limits(inputarray)
-    fourieramp = snr.findchirp_fourier(inputarray,findchirp_array,d,z)
+    inputarray_2 = snr.redshift_distance_adjustment(inputarray,d,z)
+    freqmax, freqmin = snr.frequency_limits(inputarray_2)
+    fourieramp = snr.findchirp_fourier(inputarray_2,findchirp_array,d,z)
     
     ind_SNR = np.empty((len(noisearray_list)))
     for i in range(len(noisearray_list)):
         noisearray = noisearray_list[i]
-        noise_freq_amp = snr.amplitude_interpolation(inputarray,fourieramp, \
+        noise_freq_amp = snr.amplitude_interpolation(inputarray_2,fourieramp, \
                                                  noisearray,freqmax,freqmin)
         ind_SNR[i] = snr.individual_detector_SNR(noisearray,noise_freq_amp)
     
