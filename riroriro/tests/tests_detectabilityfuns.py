@@ -5,7 +5,7 @@ Unit tests for the detectabilityfuns module.
 """
 
 import pytest
-import detectabilityfuns as det
+import riroriro.detectabilityfuns as det
 
 def test_detectabilityfuns_errors():
     """

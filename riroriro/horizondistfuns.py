@@ -7,7 +7,7 @@ waveform (from gwexporter or otherwise), collected into modular functions.
 
 import numpy as np
 
-import snrcalculatorfuns as snr
+import riroriro.snrcalculatorfuns as snr
 
 def compact_SNR_calculation(inputarray,findchirp_array,noisearray_list,method,\
                             d):

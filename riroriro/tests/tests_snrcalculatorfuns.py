@@ -6,7 +6,7 @@ Unit tests for the snrcalculatorfuns module.
 
 import numpy as np
 import pytest
-import snrcalculatorfuns as snr
+import riroriro.snrcalculatorfuns as snr
 
 def test_snrcalculatorfuns_errors():
     """

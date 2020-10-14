@@ -6,7 +6,7 @@ Unit tests for the mergerfirstfuns module.
 
 import numpy as np
 import pytest
-import mergerfirstfuns as me1
+import riroriro.mergerfirstfuns as me1
 
 def test_mergerfirstfuns_errors():
     """

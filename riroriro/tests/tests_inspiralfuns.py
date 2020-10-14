@@ -6,7 +6,7 @@ Unit tests for the inspiralfuns module.
 
 import numpy as np
 import pytest
-import inspiralfuns as ins
+import riroriro.inspiralfuns as ins
 
 def test_inspiralfuns_errors():
     """

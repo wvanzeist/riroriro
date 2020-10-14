@@ -5,7 +5,7 @@ Unit tests for the matchingfuns module.
 """
 
 import pytest
-import matchingfuns as mat
+import riroriro.matchingfuns as mat
 
 def test_matchingfuns_errors():
     """

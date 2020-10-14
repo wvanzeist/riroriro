@@ -71,9 +71,9 @@ try:
     from setuptools_scm import get_version
     version = get_version(root='..', relative_to=__file__)
 except Exception:
-    version = '0.1.1'
+    version = '0.1.2'
 """.lstrip()
 
 #setup(use_scm_version={'write_to': os.path.join('riroriro', 'version.py'),
 #                       'write_to_template': VERSION_TEMPLATE})
-setup(version='0.1.1')
+setup(version='0.1.2')

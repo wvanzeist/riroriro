@@ -5,7 +5,7 @@ Unit tests for the mergersecondfuns module.
 """
 
 import pytest
-import mergersecondfuns as me2
+import riroriro.mergersecondfuns as me2
 
 def test_mergersecondfuns_errors():
     """

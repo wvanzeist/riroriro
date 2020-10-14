@@ -6,7 +6,7 @@ Unit tests for the horizondistfuns module.
 
 import numpy as np
 import pytest
-import horizondistfuns as hor
+import riroriro.horizondistfuns as hor
 
 def test_horizondistfuns_errors():
     """
