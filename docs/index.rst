@@ -1,14 +1,18 @@
 Documentation
 =============
 
-This is the documentation for riroriro.
+This is the documentation for the functions of riroriro. Tutorials for the usage of these functions can be found at https://github.com/wvanzeist/riroriro_tutorials
 
 .. toctree::
   :maxdepth: 2
+  :caption: Contents:
 
   riroriro/index.rst
-
-.. note:: The layout of this directory is simply a suggestion.  To follow
-          traditional practice, do *not* edit this page, but instead place
-          all documentation for the package inside ``riroriro/``.
-          You can follow this practice or choose your own layout.
+  riroriro/inspiralfuns.rst
+  riroriro/mergerfirstfuns.rst
+  riroriro/matchingfuns.rst
+  riroriro/mergersecondfuns.rst
+  riroriro/gwexporter.rst
+  riroriro/snrcalculatorfuns.rst
+  riroriro/horizondistfuns.rst
+  riroriro/detectabilityfuns.rst

@@ -104,7 +104,7 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
     Approximation of a Fourier transform on the gravitational waveform data,
     using the frequency spectrum output by the simpler model FINDCHIRP (Allen
     et al., 2012) for calibration.
-    NOTE: Should really be replaced by something fft-based.
+    NOTE: May in the future be replaced by something fft-based.
     
     Parameters
     ----------
@@ -114,7 +114,8 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
     findchirp_array: numpy.ndarray
         The array output by FINDCHIRP. The second column is frequency, the
         fourth is (Fourier-transformed) strain amplitude, the other columns
-        are irrelevant.
+        are irrelevant. A grid of sample findchirp_arrays can be found at
+        https://github.com/wvanzeist/riroriro_tutorials
     d: float
         The luminosity distance to the merging binary, in Mpc.
     z: float
