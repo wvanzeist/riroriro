@@ -15,11 +15,13 @@ OR logMc and q; M and eta are used by many functions in the GW synthesis.
 Parameters
 ----------
 First method
+
 m1: float
     Mass of one object in binary in solar masses.
 m2: float
     Mass of other object in binary in solar masses.
 Second method
+
 logMc: float
     log10(the chirp mass of the binary in solar masses).
 q: float
