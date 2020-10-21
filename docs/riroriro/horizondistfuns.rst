@@ -21,7 +21,8 @@ inputarray: numpy.ndarray
 findchirp_array: numpy.ndarray
     The array output by FINDCHIRP. The second column is frequency, the
     fourth is (Fourier-transformed) strain amplitude, the other columns
-    are irrelevant.
+    are irrelevant. A grid of sample findchirp_arrays can be found at
+    https://drive.google.com/drive/folders/12TYxYKtBL1iuFHG_ySFhS12Aqv4JHGOr
 noisearray_list: list of numpy.ndarrays
     Each item in this list should be an array describing the noise spectrum
     of a detector; in each noise spectrum, it is assumed that frequency
@@ -57,7 +58,8 @@ inputarray: numpy.ndarray
 findchirp_array: numpy.ndarray
     The array output by FINDCHIRP. The second column is frequency, the
     fourth is (Fourier-transformed) strain amplitude, the other columns
-    are irrelevant.
+    are irrelevant. A grid of sample findchirp_arrays can be found at
+    https://drive.google.com/drive/folders/12TYxYKtBL1iuFHG_ySFhS12Aqv4JHGOr
 noisearray_list: list of numpy.ndarrays
     Each item in this list should be an array describing the noise spectrum
     of a detector; in each noise spectrum, it is assumed that frequency

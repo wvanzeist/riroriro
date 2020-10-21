@@ -83,7 +83,8 @@ inputarray: numpy.ndarray
 findchirp_array: numpy.ndarray
     The array output by FINDCHIRP. The second column is frequency, the
     fourth is (Fourier-transformed) strain amplitude, the other columns
-    are irrelevant.
+    are irrelevant. A grid of sample findchirp_arrays can be found at
+    https://drive.google.com/drive/folders/12TYxYKtBL1iuFHG_ySFhS12Aqv4JHGOr
 d: float
     The luminosity distance to the merging binary, in Mpc.
 z: float
