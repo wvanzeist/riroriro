@@ -100,10 +100,10 @@ Mdxdt: float
     The value of M * (dx/dt) for the input x, as given by the differential
     equation.
 
-x_integration
-=============
+PN_parameter_integration
+========================
 
-x_integration(start,end,M,eta)
+PN_parameter_integration(start,end,M,eta)
 
 Integrates the PNderiv() differential equation for the post-Newtonian
 parameter, x.
@@ -140,7 +140,7 @@ Parameters
 ----------
 xtimes: list of floats
     Times in geometric units of data points in the integration of the post-
-    Newtonian parameter, from x_integration().
+    Newtonian parameter, from PN_parameter_integration().
 M: float
     Total mass of the binary, can be obtained from get_M_and_eta().
     
@@ -160,10 +160,11 @@ the post-Newtonian parameter, based on Buskirk et al. (2019) equation 7.
 Parameters
 ----------
 x: list of floats
-    Values of the post-Newtonian parameter over time, from x_integration().
+    Values of the post-Newtonian parameter over time, from
+    PN_parameter_integration().
 dt: list of floats
     Timesteps in geometric units between each value of xtimes, from
-    x_integration().
+    PN_parameter_integration().
 M: float
     Total mass of the binary, can be obtained from get_M_and_eta().
     
@@ -185,7 +186,8 @@ binary for each timestep during the inspiral, based on Buskirk et al.
 Parameters
 ----------
 x: list of floats
-    Values of the post-Newtonian parameter over time, from x_integration().
+    Values of the post-Newtonian parameter over time, from
+    PN_parameter_integration().
 M: float
     Total mass of the binary, can be obtained from get_M_and_eta().
 eta: float

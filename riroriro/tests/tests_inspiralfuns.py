@@ -51,7 +51,7 @@ def test_inspiralfuns_numerical():
     M, eta = ins.get_M_and_eta(logMc=logMc,q=q)
     start_x = ins.startx(M,flow)
     end_x = ins.endx(eta,merger_type)
-    x, xtimes, dt = ins.x_integration(start_x,end_x,M,eta)
+    x, xtimes, dt = ins.PN_parameter_integration(start_x,end_x,M,eta)
     
     assert len(x) == 2133591, 'The length of x is not as expected.'
     
