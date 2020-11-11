@@ -6,7 +6,7 @@ The modules “inspiralfuns”, “mergerfirstfuns”, “matchingfuns”, “me
 
 Riroriro is installable via pip:
 
-> pip install riroriro
+    pip install riroriro
 
 More information can be found here: https://pypi.org/project/riroriro/
 
