@@ -45,7 +45,7 @@ In addition, we have created Jupyter Notebook tutorials to help users get starte
 
 # Research
 
-`Riroriro` has been used for research in conjunction with `Bpass`, a a suite of computer programs that simulates the evolution of a population of binary and single-star systems from a wide range of initial conditions [@bpass1, @bpass2], which also has a `Python` interface called `Hoki` [@hoki]. This research took rates of formation of merging systems from `Bpass` and then evaluated the detectability of the gravitational wave signals from those systems using `Riroriro` to obtain predictions of the rates at which gravitational waves of different types would be expected to be observed by the gravitational wave detectors LIGO and Virgo, which can be compared to their actual observations [ref for in-prep mass distribution paper?].
+`Riroriro` has been used for research in conjunction with `BPASS`, a a suite of computer programs that simulates the evolution of a population of binary and single-star systems from a wide range of initial conditions [@bpass1, @bpass2], which also has a `Python` interface called `Hoki` [@hoki]. This research took rates of formation of merging systems from `BPASS` and then evaluated the detectability of the gravitational wave signals from those systems using `Riroriro` to obtain predictions of the rates at which gravitational waves of different types would be expected to be observed by the gravitational wave detectors LIGO and Virgo, which can be compared to their actual observations [ref for in-prep mass distribution paper?].
 
 # Acknowledgments
 
