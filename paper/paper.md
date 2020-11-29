@@ -9,6 +9,8 @@ tags:
 authors:
   - name: Wouter G. J. van Zeist
     affiliation: 1
+  - name: Héloïse F. Stevance
+    affiliation: 1
   - name: J. J. Eldridge
     affiliation: 1
 affiliations:
@@ -26,7 +28,7 @@ The gravitational waveform simulation of `Riroriro` is based upon the methods of
 
 # Motivations
 
-Gravitational waves have long been an area of research in astronomy, and particularly since the first observation of gravitational waves was announced in 2016 this area has seen a lot of research activity. Observations of gravitational waves from binary mergers can provide unique information about their progenitors and stellar populations, especially when combined with electromagnetic observations in the field called multi-messenger astronomy. A major factor in the successful detection and analysis of gravitational wave signals is the creation of simulations of such signals which observed data can be compared to. Because of this, multiple gravitational wave models have been created over the years.
+Gravitational waves have long been an area of research in astronomy, and particularly since the first observation of gravitational waves was announced in 2016 [@gw150914discovery] this area has seen a lot of research activity. Observations of gravitational waves from binary mergers can provide unique information about their progenitors and stellar populations, especially when combined with electromagnetic observations in the field called multi-messenger astronomy. A major factor in the successful detection and analysis of gravitational wave signals is the creation of simulations of such signals which observed data can be compared to. Because of this, multiple gravitational wave models have been created over the years.
 
 The gravitational wave observatories LIGO/Virgo use their own models as templates, and various other research groups have also created models. For example, prior to @huerta2017 and @buskirk2019 there were other simulations of gravitational waves using similar methods of post-Newtonian expansions and/or limited numerical relativity simulations [@apostolatos1995; @buonanno2003; @ajith2007], though these had less mathematical accuracy than the later models. There are also models using alternative methods to the common post-Newtonian expansions, such as representing the two-body system of merging binaries as an effective one-body system [@buonanno1999], solving full numerical relativity equations but only at limits of the binary interaction and extrapolating for the rest of the waveform [@baker2002a; @baker2002b] or using numerically greedy algorithms to predict the shape of a wide range of waveforms based on a small number of given waveforms [@field2014]. However, for the most part these articles do not go into much detail about the computational implementation of their simulations and have not published their full database or its source code. Some have published it but in a language that is not free to use, like the original model of @buskirk2019 which is written in `Mathematica`.
 
@@ -45,7 +47,7 @@ In addition, we have created Jupyter Notebook tutorials to help users get starte
 
 # Research
 
-`Riroriro` has been used for research in conjunction with `BPASS`, a a suite of computer programs that simulates the evolution of a population of binary and single-star systems from a wide range of initial conditions [@bpass1, @bpass2], which also has a Python interface called `Hoki` [@hoki]. This research took rates of formation of merging systems from `BPASS` and then evaluated the detectability of the gravitational wave signals from those systems using `Riroriro` to obtain predictions of the rates at which gravitational waves of different types would be expected to be observed by the gravitational wave detectors LIGO and Virgo, which can be compared to their actual observations [ref for in-prep mass distribution paper?].
+`Riroriro` has been used for research in conjunction with `BPASS`, a a suite of computer programs that simulates the evolution of a population of binary and single-star systems from a wide range of initial conditions and predicts their electromagnetic spectral emission [@bpass1; @bpass2]. There is also a Python interface for `BPASS` called `Hoki` [@hoki]. This research took rates of formation of merging systems from `BPASS` and then evaluated the detectability of the gravitational wave signals from those systems using `Riroriro`. This was done to obtain predictions of the rates at which gravitational waves of different types would be expected to be observed, which can then be directly compared to those events found by the LIGO/Virgo gravitational wave observatories [ref for in-prep mass distribution paper?].
 
 # Acknowledgments
 
