@@ -47,8 +47,10 @@ In addition, we have created Jupyter Notebook tutorials to help users get starte
 
 # Research
 
-`Riroriro` has been used for research in conjunction with `BPASS`, a a suite of computer programs that simulates the evolution of a population of binary and single-star systems from a wide range of initial conditions and predicts their electromagnetic spectral emission [@bpass1; @bpass2]. There is also a Python interface for `BPASS` called `Hoki` [@hoki]. This research took rates of formation of merging systems from `BPASS` and then evaluated the detectability of the gravitational wave signals from those systems using `Riroriro`. This was done to obtain predictions of the rates at which gravitational waves of different types would be expected to be observed, which can then be directly compared to those events found by the LIGO/Virgo gravitational wave observatories [@massdistribution].
+`Riroriro` has been used for research in conjunction with `BPASS`, a suite of computer programs that simulates the evolution of a population of binary and single-star systems from a wide range of initial conditions and predicts their electromagnetic spectral emission [@bpass1; @bpass2]. There is also a Python interface for `BPASS` called `Hoki` [@hoki]. This research took rates of formation of merging systems from `BPASS` and then evaluated the detectability of the gravitational wave signals from those systems using `Riroriro`. This was done to obtain predictions of the rates at which gravitational waves of different types would be expected to be observed, which can then be directly compared to those events found by the LIGO/Virgo gravitational wave observatories [@massdistribution].
 
 # Acknowledgments
+
+HFS and JJE acknowledge support from the University of Auckland and also the Royal Society of New Zealand Te Apārangi under the Marsden Fund​.
 
 # References
