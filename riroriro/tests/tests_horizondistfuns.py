@@ -16,6 +16,8 @@ def test_horizondistfuns_errors():
     with pytest.raises(AssertionError):
         hor.horizon_distance_calculation(np.empty((3)),np.empty((3)),\
                                          np.empty((3)),'quad')
+            
+    print('test_horizondistfuns_errors completed successfully')
 
 def test_horizondistfuns_numerical(inputarray,findchirp_array,noisearray):
     """
@@ -34,4 +36,7 @@ def test_horizondistfuns_numerical(inputarray,findchirp_array,noisearray):
     #only a single detector, so choice of method is irrelevant
     
     assert np.isclose(horizon_distance,2340.33203125), ('The horizon distance '
-                                                        'is not as expected.')
+        'is not as expected. Please make sure you have set the inputs '
+        'correctly.')
+    
+    print('test_horizondistfuns_numerical completed successfully')

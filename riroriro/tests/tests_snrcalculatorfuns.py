@@ -22,6 +22,8 @@ def test_snrcalculatorfuns_errors():
     with pytest.raises(AssertionError):
         snr.redshift_distance_adjustment([0,1,2],0.2,0.2)
         
+    print('test_snrcalculatorfuns_errors completed successfully')
+        
 def test_snrcalculatorfuns_numerical(inputarray,findchirp_array,noisearray):
     """
     Testing whether the SNR-calculating functions behave as expected for a
@@ -47,4 +49,6 @@ def test_snrcalculatorfuns_numerical(inputarray,findchirp_array,noisearray):
     #specifically for LIGO Livingston noise spectrum
     
     assert np.isclose(liv_SNR,284.81739686496985), ('The SNR value is not as '
-                                                    'expected.')
+        'expected. Please make sure you have set the inputs correctly.')
+    
+    print('test_snrcalculatorfuns_numerical completed successfully')
