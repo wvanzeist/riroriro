@@ -164,3 +164,17 @@ def waveform_exporter_4col(time,freq,Aorth,Adiag,path):
     #saving exportarray to a file
     np.savetxt(path,exportarray,delimiter='\t',newline='\n')
     print('Data saved to %s' % path)
+
+def waveform_exporter(*args):
+    """
+    Included to ensure backwards compatibility; redirects to 3col or 4col
+    functions as appropriate.
+    """
+    
+    if len(args) == 4:
+        waveform_exporter_3col(args[0],args[1],args[2],args[3])
+    elif len(args) == 5:
+        waveform_exporter_4col(args[0],args[1],args[2],args[3],args[4])
+    else:
+        raise TypeError('Inappropriate number of arguments for either the '
+            'original or polarisation-included version of the function.')
