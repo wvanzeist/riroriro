@@ -14,6 +14,8 @@ def test_detectabilityfuns_errors():
     
     with pytest.raises(AssertionError):
         det.cdf_generator(123.4)
+        
+    print('test_detectabilityfuns_errors completed successfully')
 
 def test_detectabilityfuns_numerical():
     """
@@ -32,3 +34,5 @@ def test_detectabilityfuns_numerical():
     #projection function CDF is dynamically generated via random variables.
     #The included range somewhat overstates the expected variability to avoid
     #false positives of error detection.
+    
+    print('test_detectabilityfuns_numerical completed successfully')

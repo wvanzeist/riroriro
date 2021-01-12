@@ -14,3 +14,5 @@ def test_matchingfuns_errors():
     
     with pytest.raises(AssertionError):
         mat.min_switch_ind_finder('foo',[0,2],[0,2],[0,2])
+        
+    print('test_matchingfuns_errors completed successfully')

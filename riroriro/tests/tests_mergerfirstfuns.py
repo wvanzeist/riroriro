@@ -21,6 +21,8 @@ def test_mergerfirstfuns_errors():
         
     with pytest.raises(AssertionError):
         me1.quasi_normal_modes(-0.1)
+        
+    print('test_mergerfirstfuns_errors completed successfully')
 
 def test_mergerfirstfuns_numerical():
     """
@@ -45,3 +47,5 @@ def test_mergerfirstfuns_numerical():
     
     assert np.isclose(m_time[200],0.028622189299552115), ('The final value of '
         'm_time is not as expected.')
+    
+    print('test_mergerfirstfuns_numerical completed successfully')

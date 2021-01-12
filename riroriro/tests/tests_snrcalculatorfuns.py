@@ -22,6 +22,8 @@ def test_snrcalculatorfuns_errors():
     with pytest.raises(AssertionError):
         snr.redshift_distance_adjustment([0,1,2],0.2,0.2)
         
+    print('test_snrcalculatorfuns_errors completed successfully')
+        
 def test_snrcalculatorfuns_numerical(inputarray,findchirp_array,noisearray):
     """
     Testing whether the SNR-calculating functions behave as expected for a
@@ -29,7 +31,7 @@ def test_snrcalculatorfuns_numerical(inputarray,findchirp_array,noisearray):
     For inputarray and findchirp_array, please use the files
     'example_1.4_0.8.dat' and
     'findchirp_traces/mergerwave_1.40000_0.800000.dat', respectively, which are
-    provided in the riroriro_tutorials directory.
+    provided in the riroriro_tutorials repository.
     For noisearray, please use the file 'o3_l1.txt' from
     https://dcc.ligo.org/LIGO-T1500293/public
     """
@@ -47,4 +49,6 @@ def test_snrcalculatorfuns_numerical(inputarray,findchirp_array,noisearray):
     #specifically for LIGO Livingston noise spectrum
     
     assert np.isclose(liv_SNR,284.81739686496985), ('The SNR value is not as '
-                                                    'expected.')
+        'expected. Please make sure you have set the inputs correctly.')
+    
+    print('test_snrcalculatorfuns_numerical completed successfully')

@@ -30,6 +30,8 @@ def test_inspiralfuns_errors():
         
     with pytest.raises(ValueError):
         ins.endx(0.1,'not_BH_or_NS')
+        
+    print('test_inspiralfuns_errors completed successfully')
 
 def test_inspiralfuns_numerical():
     """
@@ -64,3 +66,5 @@ def test_inspiralfuns_numerical():
     
     assert np.isclose(i_amp[2133590],2.0433359836624698e-20), ('The final '
        'value of i_amp is not as expected.')
+    
+    print('test_inspiralfuns_numerical completed successfully')
