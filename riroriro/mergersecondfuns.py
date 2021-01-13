@@ -191,7 +191,7 @@ def amplitude_stitching(final_i_index,i_amp,m_amp):
     
     return i_m_amp
 
-def merger_polarisations(final_i_index,m_amp,m_phase):
+def merger_polarisations(final_i_index,m_amp,m_phase,i_Aorth):
     """
     Calculating the values of the two polarisations of strain for the merger.
     
@@ -206,6 +206,10 @@ def merger_polarisations(final_i_index,m_amp,m_phase):
     m_phase: list of floats
         Values of orbital phase over time for the merger/ringdown portion, from
         merger_phase_calculation().
+    i_Aorth: list of floats
+        The values of the orthogonal/plus polarisation of strain over time for
+        the inspiral portion, from inspiral_strain_polarisations() in
+        inspiralfuns.
         
     Returns
     -------
@@ -222,10 +226,34 @@ def merger_polarisations(final_i_index,m_amp,m_phase):
     m_Aorth = np.empty((len(m_amp)))            #orthogonal/plus polarisation
     m_Adiag = np.empty((len(m_amp)))            #diagonal/cross polarisation
     
+    #adjusting phase to ensure continuity between inspiral and merger
+    #polarisations at the switching point
+    comparison_phase_1 = (1/2) * np.arccos(i_Aorth[final_i_index] / m_amp[0])
+    #phase so that m_Aorth = i_Aorth at the switching point
+    #this ensures continuity in amplitude, but for continuity in gradient of
+    #amplitude the required value could be either this or π - this:
+    comparison_phase_2 = np.pi - comparison_phase_1
+    #now a function is required that tests both and sees which one has the
+    #correct sign of the gradient
+    #the following "sign" constants indicate whether the function is
+    #increasing or decreasing at the switching point
+    sign_i_Aorth = np.sign(i_Aorth[final_i_index] - i_Aorth[final_i_index-1])
+    sign_comparison = np.sign(np.cos(2*(m_phase[1] - comparison_phase_1)) - \
+                              np.cos(2*(m_phase[0] - comparison_phase_1)))
+    if sign_i_Aorth == sign_comparison: #signs match, phase_1 is correct
+        comparison_phase = comparison_phase_1
+    else:                               #signs don't match, phase_2 is correct
+        comparison_phase = comparison_phase_2
+    
+    phase_difference = m_phase[0] - comparison_phase
+    adjusted_m_phase = np.empty((len(m_phase)))
+    for i in range(len(m_amp)):    #adjusting phase for polarisation continuity
+        adjusted_m_phase[i] = m_phase[i] - phase_difference
+    
     for i in range(len(m_amp)):
-        m_Aorth[i] = m_amp[i] * np.cos(2*m_phase[i])
-        m_Adiag[i] = m_amp[i] * np.sin(2*m_phase[i])
-        
+        m_Aorth[i] = m_amp[i] * np.cos(2*adjusted_m_phase[i])
+        m_Adiag[i] = m_amp[i] * np.sin(2*adjusted_m_phase[i])
+    
     #output type conversion
     m_Aorth = list(m_Aorth)
     m_Adiag = list(m_Adiag)
