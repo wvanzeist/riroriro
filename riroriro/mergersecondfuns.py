@@ -238,8 +238,8 @@ def merger_polarisations(final_i_index,m_amp,m_phase,i_Aorth):
     #the following "sign" constants indicate whether the function is
     #increasing or decreasing at the switching point
     sign_i_Aorth = np.sign(i_Aorth[final_i_index] - i_Aorth[final_i_index-1])
-    sign_comparison = np.sign(np.cos(2*(m_phase[1] - comparison_phase_1)) - \
-                              np.cos(2*(m_phase[0] - comparison_phase_1)))
+    sign_comparison = np.sign(np.cos(2*(m_phase[1] - m_phase[0] + \
+        comparison_phase_1)) - np.cos(2*comparison_phase_1))
     if sign_i_Aorth == sign_comparison: #signs match, phase_1 is correct
         comparison_phase = comparison_phase_1
     else:                               #signs don't match, phase_2 is correct
