@@ -7,7 +7,7 @@ This is the documentation for the snrcalculatorfuns module, which consists of pa
 polynomial_redshift
 ===================
 
-polynomial_redshift(d)
+``polynomial_redshift(d)``
 
 Polynomial approximation of calculating redshift corresponding to a given
 distance.
@@ -25,7 +25,7 @@ z: float
 redshift_distance_adjustment
 ============================
 
-redshift_distance_adjustment(inputarray,d,z)
+``redshift_distance_adjustment(inputarray,d,z)``
 
 Adjusts the frequencies and amplitudes in the input gravitational waveform
 to account for the effects of distance/redshift.
@@ -48,7 +48,7 @@ adjustedarray: numpy.ndarray
 frequency_limits
 ================
 
-frequency_limits(inputarray)
+``frequency_limits(inputarray)``
 
 Calculates the upper and lower limits of the frequency of the gravitational
 waveform in inputarray, which are used by amplitude_interpolation().
@@ -68,7 +68,7 @@ Returns
 findchirp_fourier
 =================
 
-findchirp_fourier(inputarray,findchirp_array,d,z)
+``findchirp_fourier(inputarray,findchirp_array,d,z)``
 
 Approximation of a Fourier transform on the gravitational waveform data,
 using the frequency spectrum output by the simpler model FINDCHIRP (Allen
@@ -99,7 +99,7 @@ fourieramp: list
 amplitude_interpolation
 =======================
 
-amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin)
+``amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin)``
 
 The simulated gravitational waveform data and the detector noise spectrum
 are assumed to have amplitude data at different sets of frequencies, so
@@ -134,7 +134,7 @@ noise_freq_amp: list
 individual_detector_SNR
 =======================
 
-individual_detector_SNR(noisearray,noise_freq_amp)
+``individual_detector_SNR(noisearray,noise_freq_amp)``
 
 Calculates the single-detector optimal-alignment SNR by comparing the
 waveform frequency spectrum and detector noise spectrum using the method of

@@ -7,7 +7,7 @@ This is the documentation for the mergerfirstfuns module, which consists of the 
 quasi_normal_modes
 ==================
 
-quasi_normal_modes(eta)
+``quasi_normal_modes(eta)``
 
 Calculation of the final spin and quasi-normal mode factor used in the
 calculation of angular frequency for the merger/ringdown waveform, based on
@@ -28,7 +28,7 @@ Returns
 gIRS_coefficients
 =================
 
-gIRS_coefficients(eta,sfin)
+``gIRS_coefficients(eta,sfin)``
 
 Calculation of several gIRS (generic implicit rotating source)-related
 coefficients used in the calculation of angular frequency for the merger/
@@ -52,7 +52,7 @@ Returns
 merger_freq_calculation
 =======================
 
-merger_freq_calculation(wqnm,b,C,kappa)
+``merger_freq_calculation(wqnm,b,C,kappa)``
 
 Calculation of orbital angular frequency for the merger/ringdown portion,
 based on Buskirk et al. (2019) equations 17 and 18.
@@ -77,7 +77,7 @@ Returns
 fhat_differentiation
 ====================
 
-fhat_differentiation(fhat)
+``fhat_differentiation(fhat)``
 
 Calculation of derivative of fhat used by amplitude calculations in
 mergersecondfuns.
@@ -96,7 +96,7 @@ fhatdot: list of floats
 merger_time_conversion
 ======================
 
-merger_time_conversion(M)
+``merger_time_conversion(M)``
 
 Calculating times in real units corresponding to the times in geometric
 units used by other merger/ringdown functions.

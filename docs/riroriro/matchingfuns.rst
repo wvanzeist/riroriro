@@ -7,7 +7,7 @@ This is the documentation for the matchingfuns module, which consists of parts o
 MQdiff
 ======
 
-MQdiff(i,i_time,i_omega,m_time,m_omega)
+``MQdiff(i,i_time,i_omega,m_time,m_omega)``
 
 A function that calculates a "matching quantity" that is subsequently used
 to determine the best offset and switching point for matching together the
@@ -41,7 +41,7 @@ df_diff: float (or nan)
 min_switch_ind_finder
 =====================
 
-min_switch_ind_finder(i_time,i_omega,m_time,m_omega)
+``min_switch_ind_finder(i_time,i_omega,m_time,m_omega)``
 
 Finds the index in the merger/ringdown data where the switch from inspiral
 to merger/ringdown should occur, as part of the matching process.
@@ -70,7 +70,7 @@ min_switch_ind: int
 final_i_index_finder
 ====================
 
-final_i_index_finder(min_switch_ind,i_omega,m_omega)
+``final_i_index_finder(min_switch_ind,i_omega,m_omega)``
 
 Finds what the last index in the inspiral data before the switch to the
 merger/ringdown should be, as part of the matching process.
@@ -96,7 +96,7 @@ final_i_index: int
 time_offset_finder
 ==================
 
-time_offset_finder(min_switch_ind,final_i_index,i_time,m_time)
+``time_offset_finder(min_switch_ind,final_i_index,i_time,m_time)``
 
 Calculates what the offset between the time values of the inspiral and
 merger/ringdown portions should be to match them together.
@@ -125,7 +125,7 @@ time_offset: float
 time_frequency_stitching
 ========================
 
-time_frequency_stitching(min_switch_ind,final_i_index,time_offset,i_time,i_omega,m_time,m_omega)
+``time_frequency_stitching(min_switch_ind,final_i_index,time_offset,i_time,i_omega,m_time,m_omega)``
 
 Stitches together the inspiral and merger/ringdown portions of the time and
 angular frequency lists to give combined lists for these with the correct
@@ -164,7 +164,7 @@ Returns
 frequency_SI_units
 ==================
 
-frequency_SI_units(i_m_omega,M)
+``frequency_SI_units(i_m_omega,M)``
 
 The angular frequency in geometric units translated to ordinary/temporal
 frequency in SI units (Hz). Useful for plotting and also required for the
