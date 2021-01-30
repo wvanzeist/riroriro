@@ -20,6 +20,7 @@ m1: float
     Mass of one object in binary in solar masses.
 m2: float
     Mass of other object in binary in solar masses.
+
 Second method
 
 logMc: float
