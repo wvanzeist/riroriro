@@ -7,7 +7,7 @@ This is the documentation for the mergersecondfuns module, which consists of the
 merger_phase_calculation
 ========================
 
-merger_phase_calculation(min_switch_ind,final_i_index,i_phase,m_omega)
+``merger_phase_calculation(min_switch_ind,final_i_index,i_phase,m_omega)``
 
 Calculation of the orbital phase for the merger/ringdown portion, based
 on Buskirk et al. (2019) equation 21.
@@ -36,7 +36,7 @@ m_phase: list of floats
 phase_stitching
 ===============
 
-phase_stitching(final_i_index,i_phase,m_phase)
+``phase_stitching(final_i_index,i_phase,m_phase)``
 
 Stitching together the inspiral and merger/ringdown portions of the phase
 lists to give a combined list with the correct matching.
@@ -62,7 +62,7 @@ i_m_phase: list of floats
 merger_strain_amplitude
 =======================
 
-merger_strain_amplitude(min_switch_ind,final_i_index,alpha,i_amp,m_omega,fhat,fhatdot)
+``merger_strain_amplitude(min_switch_ind,final_i_index,alpha,i_amp,m_omega,fhat,fhatdot)``
 
 Calculating the amplitude of strain for the merger/ringdown portion, based
 on Buskirk et al. (2019) equation 16.
@@ -100,7 +100,7 @@ m_amp: list of floats
 amplitude_stitching
 ===================
 
-amplitude_stitching(final_i_index,i_amp,m_amp)
+``amplitude_stitching(final_i_index,i_amp,m_amp)``
 
 Stitching together the inspiral and merger/ringdown portions of the
 amplitude lists to give a combined list with the correct matching.
