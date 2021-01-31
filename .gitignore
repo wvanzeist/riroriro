@@ -5,3 +5,5 @@ riroriro.egg-info/
 dist/
 *.pyc
 riroriro/version.py
+.tox/
+docs/_build/
