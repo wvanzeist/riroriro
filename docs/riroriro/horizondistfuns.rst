@@ -7,7 +7,7 @@ This is the documentation for the horizondistfuns module, which consists of part
 compact_SNR_calculation
 =======================
 
-compact_SNR_calculation(inputarray,findchirp_array,noisearray_list,method,d)
+``compact_SNR_calculation(inputarray,findchirp_array,noisearray_list,method,d)``
 
 Runs through all of the functions of snrcalculatorfuns to obtain a SNR from
 an individual detector. This function is mainly included not to be called
@@ -45,7 +45,7 @@ final_SNR: float
 horizon_distance_calculation
 ============================
 
-horizon_distance_calculation(inputarray,findchirp_array,noisearray_list,method)
+``horizon_distance_calculation(inputarray,findchirp_array,noisearray_list,method)``
 
 Calculates the horizon distance (maximum distance at which something can
 be observed) given optimal alignment for a given merger.

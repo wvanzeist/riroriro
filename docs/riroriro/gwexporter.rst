@@ -7,7 +7,7 @@ This is the documentation for the gwexporter module, which consists of functions
 waveform_exporter
 =================
 
-waveform_exporter(time,freq,amp,path)
+``waveform_exporter(time,freq,amp,path)``
 
 Function to export a simulated gravitational waveform into a file.
 
@@ -39,7 +39,7 @@ the second is the frequency and the third is the amplitude.
 waveform_arrayer
 ================
 
-waveform_arrayer(time,freq,amp)
+``waveform_arrayer(time,freq,amp)``
 
 Function to collate important data of the simulated gravitational waveform
 (for SNR calculation etc.) into a single array for ease of storage. Similar
