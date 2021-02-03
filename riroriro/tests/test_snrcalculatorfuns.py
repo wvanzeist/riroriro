@@ -30,7 +30,7 @@ def test_snrcalculatorfuns_numerical():
     given waveform data file.
     """
     
-    import urllib
+    import urllib.request
     
     #we load in the three files of example data; ideally np.genfromtxt would be
     #used for this but these files are stored on the riroriro_tutorials github
