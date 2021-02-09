@@ -224,7 +224,8 @@ def proper_fourier(inputarray,freqmax):
     #for the next shorter period that *is*.
     signal_duration = inputarray[len(inputarray)-1,0]
     nyquist_time_ratio = signal_duration / nyquist_period
-    no_of_samples = np.ceil(nyquist_time_ratio) #higher ratio, lower period
+    no_of_samples = int(np.ceil(nyquist_time_ratio))
+    #higher ratio, lower period (becomes float if not set as int)
     sampling_period = signal_duration / no_of_samples
     
     #now we use amp_time_inter to generate measurements at this period
