@@ -219,7 +219,8 @@ def proper_fourier(inputarray,freqmax):
     #For the array we feed to the FFT, we want to balance accuracy with
     #CPU time and memory; the minimum sampling rate to prevent aliasing is the
     #Nyquist rate, twice the highest frequency in the signal
-    nyquist_period = 1/(2*freqmax)      #period corresponding to Nyquist freq.
+    nyquist_period = 1/(4*freqmax)      #period corresponding to Nyquist freq.
+    #(except freq. is doubled to reduce FFT glitching at high frequencies)
     #This period won't be an exact divisor of the signal's duration, so we look
     #for the next shorter period that *is*.
     signal_duration = inputarray[len(inputarray)-1,0]
