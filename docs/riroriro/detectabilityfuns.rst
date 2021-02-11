@@ -7,7 +7,7 @@ This is the documentation for the detectabilityfuns module, which consists of pa
 cdf_generator
 =============
 
-cdf_generator(N=10**6)
+``cdf_generator(N=10**6)``
 
 Generates the cumulative distribution function (CDF) of the projection
 function Theta, for use with detectability_calculator(), based on Finn
@@ -31,7 +31,7 @@ max_CDF: float
 detectability_calculator
 ========================
 
-detectability_calculator(Theta_CDF,min_CDF,max_CDF,SNR_in)
+``detectability_calculator(Theta_CDF,min_CDF,max_CDF,SNR_in)``
 
 Given the optimal-alignment SNR of a merger, this function returns the
 fraction of arbitrary orientations in which the merger would be expected to

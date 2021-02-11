@@ -30,7 +30,7 @@ def test_mergerfirstfuns_numerical():
     numerically.
     """
     
-    #generic system, somewhat like SW150914
+    #generic system, somewhat like GW150914
     M = 60.0 #(Msun)
     eta = 0.24
     
@@ -45,7 +45,7 @@ def test_mergerfirstfuns_numerical():
     assert np.isclose(fhatdot[200],-1.6137233253473387e-07), ('The final value'
         ' of fhatdot is not as expected.')
     
-    assert np.isclose(m_time[200],0.028622189299552115), ('The final value of '
+    assert np.isclose(m_time[200],0.029538), ('The final value of '
         'm_time is not as expected.')
     
     print('test_mergerfirstfuns_numerical completed successfully')

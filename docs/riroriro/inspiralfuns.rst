@@ -7,7 +7,7 @@ This is the documentation for the inspiralfuns module, which consists of parts o
 get_M_and_eta
 =============
 
-get_M_and_eta(**kwargs)
+``get_M_and_eta(**kwargs)``
 
 Gives total mass (M) and symmetric mass ratio (eta) from either m1 and m2
 OR logMc and q; M and eta are used by many functions in the GW synthesis.
@@ -20,6 +20,7 @@ m1: float
     Mass of one object in binary in solar masses.
 m2: float
     Mass of other object in binary in solar masses.
+
 Second method
 
 logMc: float
@@ -35,7 +36,7 @@ Returns
 startx
 ======
 
-startx(M,flow)
+``startx(M,flow)``
 
 Gives starting value/lower boundary for integration of post-Newtonian
 parameter, based on Buskirk et al. (2019) equation 22.
@@ -56,7 +57,7 @@ value: float
 endx
 ====
 
-endx(eta,merger_type)
+``endx(eta,merger_type)``
 
 Gives ending value/upper boundary for integration of post-Newtonian
 parameter, based on Buskirk et al. (2019) equation 23.
@@ -77,7 +78,7 @@ value: float
 PNderiv
 =======
 
-PNderiv(x,M,eta)
+``PNderiv(x,M,eta)``
 
 Encodes the differential equation for the post-Newtonian parameter that is
 integrated by x_integration(), based on Huerta et al. (2017) and Buskirk et
@@ -103,7 +104,7 @@ Mdxdt: float
 PN_parameter_integration
 ========================
 
-PN_parameter_integration(start,end,M,eta)
+``PN_parameter_integration(start,end,M,eta)``
 
 Integrates the PNderiv() differential equation for the post-Newtonian
 parameter, x.
@@ -131,7 +132,7 @@ Returns
 inspiral_time_conversion
 ========================
 
-inspiral_time_conversion(xtimes,M)
+``inspiral_time_conversion(xtimes,M)``
 
 Converting times in geometric units from x_integration() to times in real
 units.
@@ -152,7 +153,7 @@ realtimes: list of floats
 inspiral_phase_freq_integration
 ===============================
 
-inspiral_phase_freq_integration(x,dt,M)
+``inspiral_phase_freq_integration(x,dt,M)``
 
 Integration of orbital phase and angular frequency for the inspiral, using
 the post-Newtonian parameter, based on Buskirk et al. (2019) equation 7.
@@ -177,7 +178,7 @@ Returns
 radius_calculation
 ==================
 
-radius_calculation(x,M,eta)
+``radius_calculation(x,M,eta)``
 
 Calculation of orbital radius (and time-derivative of radius) for the
 binary for each timestep during the inspiral, based on Buskirk et al.
@@ -204,7 +205,7 @@ Returns
 a1_a2_calculation
 =================
 
-a1_a2_calculation(r,rdot,omega,D,M,eta)
+``a1_a2_calculation(r,rdot,omega,D,M,eta)``
 
 Calculation of A1 and A2, two coefficients used in the calculation of
 strain polarisations, based on Buskirk et al. (2019) equation 9.
@@ -238,7 +239,7 @@ Returns
 inspiral_strain_polarisations
 =============================
 
-inspiral_strain_polarisations(A1,A2,i_phase)
+``inspiral_strain_polarisations(A1,A2,i_phase)``
 
 Calculating the values of the two polarisations of strain for the inspiral,
 using the coefficients from a1_a2_calculation().
@@ -264,7 +265,7 @@ Returns
 inspiral_strain_amplitude
 =========================
 
-inspiral_strain_amplitude(Aorth,Adiag)
+``inspiral_strain_amplitude(Aorth,Adiag)``
 
 Calculating the amplitude of the strain from the polarisations.
 
@@ -285,7 +286,7 @@ i_amp: list of floats
 list_size_reducer
 =================
 
-list_size_reducer(reduction_factor,your_list)
+``list_size_reducer(reduction_factor,your_list)``
 
 Optional function to reduce the size of the lists output by the inspiral
 functions (not the merger lists, as those are much shorter), in order to
