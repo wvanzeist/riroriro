@@ -236,8 +236,17 @@ def proper_fourier(inputarray,freqmax):
         even_fourierinput[i] = Aorth_inter(sampling_times[i]) - \
             1j*Adiag_inter(sampling_times[i])
     
-    fourieramp = np.fft.fft(even_fourierinput)      #Fourier transform
-    fourierfreqs = np.fft.fftfreq(no_of_samples,d=sampling_period)
+    raw_fourieramp = np.fft.fft(even_fourierinput)      #Fourier transform
+    raw_fourierfreqs = np.fft.fftfreq(no_of_samples,d=sampling_period)
+    
+    #removing irrelevant negative frequencies from the output
+    cplx_fourieramp = raw_fourieramp[:int(len(raw_fourieramp)/2)]
+    fourierfreqs = raw_fourierfreqs[:int(len(raw_fourierfreqs)/2)]
+    
+    #converting FFT strain values from complex to absolute/real amplitude
+    fourieramp = np.empty((len(cplx_fourieramp)))
+    for i in range(len(fourieramp)):
+        fourieramp[i] = abs(cplx_fourieramp[i])
     
     #output type conversion
     fourieramp = list(fourieramp)
