@@ -247,7 +247,7 @@ def proper_fourier(inputarray,freqmax):
     #return even_fourierinput, fourieramp         #testing
     return [fourieramp,fourierfreqs]
 
-def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
+def amplitude_interpolation(freqinput,fourieramp,noisearray,freqmax,freqmin):
     """
     The simulated gravitational waveform data and the detector noise spectrum
     are assumed to have amplitude data at different sets of frequencies, so
@@ -256,12 +256,18 @@ def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
     
     Parameters
     ----------
-    inputarray: numpy.ndarray
-        The time, frequency and amplitude data of the gravitational waveform;
-        should have been adjusted by redshift_distance_adjustment().
+    freqinput: either inputarray if using findchirp_fourier, or fourier_freqs
+        if using proper_fourier.
+        inputarray: numpy.ndarray
+            The time, frequency and amplitude data of the gravitational
+            waveform; should have been adjusted by
+            redshift_distance_adjustment().
+        fourierfreqs: list
+            The frequency values corresponding to each Fourier-transformed
+            amplitude measurement, from findchirp_fourier.
     fourieramp: list
         Fourier-transformed/calibrated amplitudes at each frequency value in
-        inputarray, from findchirp_fourier().
+        inputarray, from findchirp_fourier() or proper_fourier.
     noisearray: numpy.ndarray
         Data on the noise spectrum of the detector; it is assumed that
         frequency values are in the first column and ASD noise levels in the
@@ -283,13 +289,18 @@ def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
     from scipy.interpolate import interp1d
     
     #input type checking
-    assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
+    assert (type(freqinput) == np.ndarray) or (type(freqinput) == list), \
+        ('freqinput should be an array (if using findchirp_fourier) or a list '
+        '(if using proper_fourier).')
     assert type(fourieramp) == list, 'fourieramp should be a list.'
     assert type(noisearray) == np.ndarray, 'noisearray should be an array.'
     assert type(freqmax) == float, 'freqmax should be a float.'
     assert type(freqmin) == float, 'freqmin should be a float.'
     
-    smoothinput = interp1d(inputarray[:,1], fourieramp[:], kind='cubic')
+    if type(freqinput) == np.ndarray:   #inputarray, from findchirp_fourier
+        smoothinput = interp1d(freqinput[:,1], fourieramp[:], kind='cubic')
+    else:                               #fourierfreqs, from proper_fourier
+        smoothinput = interp1d(freqinput[:], fourieramp[:], kind='cubic')
     #interpolating input frequency-amp curve so it can be calculated for the
     #other grid of frequencies used by noisearray
     
