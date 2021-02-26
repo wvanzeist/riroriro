@@ -118,3 +118,77 @@ def detectability_calculator(Theta_CDF,min_CDF,max_CDF,SNR_in):
     det = float(det)
     
     return det
+
+def specific_orientation_SNR(theta,phi,iota,psi,SNR_in,angle_unit='rad'):
+    """
+    Given the optimal-alignment SNR of a merger, this function returns the SNR
+    that would result if the detector and binary had a specific orientation/
+    alignment, specified by four angles as in Finn (1996), Belczynski et al.
+    (2013), Belczynski et al. (2014).
+    
+    Parameters
+    ----------
+    theta: float
+        One of the angles descriving the direction of the line of sight to the
+        gravitational wave source relative to the axes of the detector’s arms
+        (sky-location coordinates). Ranges from 0 to π/2 rad (90 deg).
+    phi: float
+        One of the angles descriving the direction of the line of sight to the
+        gravitational wave source relative to the axes of the detector’s arms
+        (sky-location coordinates). Ranges from 0 to 2π rad (360 deg).
+    iota: float
+        The inclination angle of the binary. Ranges from 0 to π/2 rad (90 deg).
+    psi: float
+        The polarisation angle of the binary. Ranges from 0 to π (180 deg).
+    SNR_in: float
+        The optimal-alignment SNR of the merger in question, can be obtained
+        from snrcalculatorfuns.
+    angle_unit: str
+        Specifies whether the input angles are given in 'rad' or 'deg'; the
+        default is 'rad'.
+    
+    Returns
+    -------
+    SNR_out: float
+        The SNR of the merger in question at the specific orientation given by
+        the input angles.
+    """
+    
+    #input type checking
+    assert type(theta) == float, 'theta should be a float.'
+    assert type(phi) == float, 'phi should be a float.'
+    assert type(iota) == float, 'iota should be a float.'
+    assert type(psi) == float, 'psi should be a float.'
+    assert type(SNR_in) == float, 'SNR_in should be a float.'
+    
+    pi=np.pi
+    
+    #converting from deg to rad, if necessary
+    if angle_unit == 'deg':
+        theta *= 2*pi/360
+        phi *= 2*pi/360
+        iota *= 2*pi/360
+        psi *= 2*pi/360
+    elif angle_unit == 'rad':
+        pass
+    else:
+        raise ValueError('angle_unit must be either \'rad\' or \'deg\'.')
+    
+    #checking input angles are within the expected ranges
+    assert 0 <= theta <= pi/2, ('theta should be between 0 and π/2 rad (90 '
+                                'deg).')
+    assert 0 <= phi <= 2*pi, 'phi should be between 0 and 2π rad (360 deg).'
+    assert 0 <= iota <= pi/2, 'iota should be between 0 and π/2 rad (90 deg).'
+    assert 0 <= psi <= pi, 'psi should be between 0 and π rad (180 deg).'
+    
+    #calculating projection function
+    Fplus = 0.5*(1 + np.cos(theta)**2)*np.cos(2*phi)*np.cos(2*psi) - \
+        np.cos(theta)*np.sin(2*phi)*np.sin(2*psi)
+    Fcross = 0.5*(1 + np.cos(theta)**2)*np.cos(2*phi)*np.sin(2*psi) + \
+        np.cos(theta)*np.sin(2*phi)*np.cos(2*psi)
+    Theta_proj = 0.5*np.sqrt(Fplus**2*(1 + np.cos(iota)**2)**2 + \
+        4*Fcross**2*np.cos(iota)**2)
+        
+    SNR_out = SNR_in * Theta_proj               #applying projection function
+    
+    return SNR_out

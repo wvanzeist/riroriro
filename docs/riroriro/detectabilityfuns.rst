@@ -55,3 +55,40 @@ Returns
 -------
 det: float
     The detectability fraction of the merger.
+
+specific_orientation_SNR
+========================
+
+``specific_orientation_SNR(theta,phi,iota,psi,SNR_in,angle_unit='rad')``
+
+Given the optimal-alignment SNR of a merger, this function returns the SNR
+that would result if the detector and binary had a specific orientation/
+alignment, specified by four angles as in Finn (1996), Belczynski et al.
+(2013), Belczynski et al. (2014).
+
+Parameters
+----------
+theta: float
+    One of the angles descriving the direction of the line of sight to the
+    gravitational wave source relative to the axes of the detector’s arms
+    (sky-location coordinates). Ranges from 0 to π/2 rad (90 deg).
+phi: float
+    One of the angles descriving the direction of the line of sight to the
+    gravitational wave source relative to the axes of the detector’s arms
+    (sky-location coordinates). Ranges from 0 to 2π rad (360 deg).
+iota: float
+    The inclination angle of the binary. Ranges from 0 to π/2 rad (90 deg).
+psi: float
+    The polarisation angle of the binary. Ranges from 0 to π (180 deg).
+SNR_in: float
+    The optimal-alignment SNR of the merger in question, can be obtained
+    from snrcalculatorfuns.
+angle_unit: str
+    Specifies whether the input angles are given in 'rad' or 'deg'; the
+    default is 'rad'.
+
+Returns
+-------
+SNR_out: float
+    The SNR of the merger in question at the specific orientation given by
+    the input angles.
