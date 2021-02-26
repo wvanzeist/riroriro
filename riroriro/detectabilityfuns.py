@@ -39,7 +39,7 @@ def cdf_generator(N=10**6):
     Theta_dist=np.empty((N))
     for i in range(N):
         psi=random()*pi
-        phi=random()*pi
+        phi=random()*2*pi
         costh=random()
         cosiota=random()
         #sinth = np.sqrt(1 - costh**2)
