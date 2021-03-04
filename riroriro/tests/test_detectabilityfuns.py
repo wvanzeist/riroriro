@@ -4,6 +4,7 @@
 Unit tests for the detectabilityfuns module.
 """
 
+import numpy as np
 import pytest
 import riroriro.detectabilityfuns as det
 
@@ -14,6 +15,24 @@ def test_detectabilityfuns_errors():
     
     with pytest.raises(AssertionError):
         det.cdf_generator(123.4)
+    
+    with pytest.raises(AssertionError):
+        det.specific_orientation_SNR('foo',0.1,0.1,0.1,20.0)
+        
+    with pytest.raises(AssertionError):
+        det.specific_orientation_SNR(2.0,0.1,0.1,0.1,20.0)
+        
+    with pytest.raises(AssertionError):
+        det.specific_orientation_SNR(0.1,7.0,0.1,0.1,20.0)
+        
+    with pytest.raises(AssertionError):
+        det.specific_orientation_SNR(0.1,0.1,2.0,0.1,20.0)
+        
+    with pytest.raises(AssertionError):
+        det.specific_orientation_SNR(0.1,0.1,0.1,4.0,20.0)
+    
+    with pytest.raises(ValueError):
+        det.specific_orientation_SNR(0.1,0.1,0.1,0.1,20.0,'foo')
         
     print('test_detectabilityfuns_errors completed successfully')
 
@@ -34,5 +53,10 @@ def test_detectabilityfuns_numerical():
     #projection function CDF is dynamically generated via random variables.
     #The included range somewhat overstates the expected variability to avoid
     #false positives of error detection.
+    
+    adjusted_SNR = det.specific_orientation_SNR(50.0,50.0,50.0,50.0,20.0,'deg')
+                                    #semi-arbitrary parameters
+    assert np.isclose(adjusted_SNR,9.011032429277753), ('The orientation-'
+        'adjusted SNR is not as expected.')
     
     print('test_detectabilityfuns_numerical completed successfully')
