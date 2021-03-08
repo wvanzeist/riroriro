@@ -1,5 +1,5 @@
 ---
-title: 'Riroriro: Simulating gravitational waves and calculating signal-to-noise ratios in Python'
+title: 'Riroriro: Simulating gravitational waves and evaluating their detectability in Python'
 tags:
   - Python
   - astronomy
