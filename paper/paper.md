@@ -43,7 +43,7 @@ Features of `Riroriro` include:
 - Calculating the horizon distance (maximum distance at which an event could be observed) for a gravitational wave model and a given detector.
 - Given the optimal-alignment SNR of an event, evaluating its detectability, the probability that the event would be detected with a SNR above the commonly used threshold of 8, if the alignment would be arbitrary. These results could then be combined with population synthesis calculations to estimate how many of the predicted mergers would be detected.
 
-In addition, we have created Jupyter Notebook tutorials to help users get started with `Riroriro` ([see tutorials](https://github.com/wvanzeist/riroriro_tutorials)).
+In addition, to help users get started with `Riroriro`, we have created Jupyter Notebook tutorials ([see here](https://github.com/wvanzeist/riroriro_tutorials)).
 
 # Research
 
