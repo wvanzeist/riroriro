@@ -19,3 +19,9 @@ Full documentation of each of the functions of Riroriro can be found here: https
 Riroriro is one of several Python packages associated with **BPASS** (Binary Population And Spectral Synthesis), a suite of programs that simulates the evolution of a population of binary and single-star systems from a wide range of initial conditions. Each of these associated packages are named after native animals of New Zealand. The riroriro (*Gerygone igata*, also known as the grey warbler) is a small bird that can be recognised by its distinctive melodious call but is rarely seen, similarly to how black hole binary mergers are detected by their gravitational wave signals rather than visually.
 
 The central website of BPASS, which also contains links to related programs, can be found here: https://bpass.auckland.ac.nz
+
+## Paper
+
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02968/status.svg)](https://doi.org/10.21105/joss.02968)
+
+A paper describing Riroriro has been published in the Journal of Open Source Software. If you use Riroriro in your work, please cite this paper! https://doi.org/10.21105/joss.02968
