@@ -144,10 +144,10 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
     h_diag = np.empty((no_of_samples))          #diagonal/cross polarisation
     
     for i in range(no_of_samples):
-        h_orth[i] = amp * np.cos(2*pi*freq*times[i] + pi*freq_dot*times**2 + \
-                              init_phase)               #Shah eq. 1
-        h_diag[i] = amp * np.sin(2*pi*freq*times[i] + pi*freq_dot*times**2 + \
-                              init_phase)               #Shah eq. 1
+        h_orth[i] = amp * np.cos(2*pi*freq*times[i] + pi*freq_dot*times[i]**2 \
+                              + init_phase)             #Shah eq. 1
+        h_diag[i] = amp * np.sin(2*pi*freq*times[i] + pi*freq_dot*times[i]**2 \
+                              + init_phase)             #Shah eq. 2
             
     #output type conversion
     times = list(times)
@@ -155,3 +155,125 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
     h_diag = list(h_diag)
     
     return [times,h_orth,h_diag]
+
+def wd_inclination(horth,hdiag,**kwargs):
+    """
+    Applies the effects of the binary's inclination on the strain values of a
+    white dwarf binary, based on Shah et al. (2012) equations 1,2.
+
+    Parameters
+    ----------
+    horth: list of floats
+        The orthogonal/plus polarisation of strain over time, from
+        wd_polarisations().
+    hdiag: list of floats
+        The diagonal/cross polarisation of strain over time, from
+        wd_polarisations().
+    **kwargs: The inclination of the binary, expressed as either:
+        iota: float
+            The inclination angle, in radians.
+        cosiota: float
+            The cosine of the inclination angle.
+
+    Returns
+    -------
+    [adj_horth,adj_hdiag]: list of lists of floats
+        The first list is the adjusted orthogonal/plus values, the second is
+        the adjusted diagonal/cross values.
+    """
+    
+    #input type checking
+    assert type(horth) == list, 'horth should be a list.'
+    assert type(hdiag) == list, 'hdiag should be a list.'
+    for each_variable in kwargs.values():
+        assert type(each_variable) == float, ('The inclination should be a '
+                                              'float.')
+    
+    #making sure the user specifies at least one of iota and cosiota
+    if not ('iota' in kwargs or 'cosiota' in kwargs):
+        raise TypeError('Please specify iota or cosiota.')
+        
+    #making sure the user doesn't specify both iota and cosiota
+    if 'iota' in kwargs and 'cosiota' in kwargs:
+        raise TypeError('Please specify either iota or cosiota, not both.')
+    
+    if 'iota' in kwargs:
+        #checking iota is within the expected range
+        assert 0 <= kwargs['iota'] <= np.pi/2, ('iota should be between 0 and '
+                                                'π/2 rad.')
+        cosiota = np.cos(kwargs['iota'])
+    
+    if 'cosiota' in kwargs:
+        #checking cosiota is within the expected range
+        assert 0 <= kwargs['cosiota'] <= 1, ('cosiota should be between 0 and '
+                                             '1.')
+        cosiota = kwargs['cosiota']
+        
+    #applying inclination to strain
+    adj_horth = np.empty((len(horth)))
+    adj_hdiag = np.empty((len(hdiag)))
+    for i in range(len(horth)):
+        adj_horth[i] = 0.5*(1 + cosiota**2) * horth[i]  #part of Shah eq. 1
+        adj_hdiag[i] = cosiota * hdiag[i]               #part of Shah eq. 2
+    
+    #output type conversion
+    adj_horth = list(adj_horth)
+    adj_hdiag = list(adj_hdiag)
+    
+    return [adj_horth,adj_hdiag]
+
+def instantaneous_beam_pattern(theta_d,phi_d,psi_d):
+    """
+    Outputs coefficients, known as the detector beam-pattern coefficients,
+    describing LISA's response to a binary's GW signal depending on the
+    binary's orientation/alignment as specified by three angles, based on
+    Cutler (1998) equation 3.12.
+    This function uses the alignment at a specific instant for the detector's
+    (rotating) frame of reference.
+    
+    (These particular coefficients are also applicable to LIGO/Virgo and thus
+    also appear in the detectabilityfuns module.)
+    
+    Parameters
+    ----------
+    theta_d: float
+        The ecliptic latitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary). Ranges
+        from 0 to π/2 rad (90 deg).
+        This angle should be with respect to the detector's (rotating) frame
+        of reference.
+    phi_d: float
+        The ecliptic longitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary). Ranges
+        from 0 to 2π rad (360 deg).
+        This angle should be with respect to the detector's (rotating) frame
+        of reference.
+    psi_d: float
+        The polarisation angle of the binary. Ranges from 0 to π (180 deg).
+        This angle should be with respect to the detector's (rotating) frame
+        of reference.
+    
+    Results
+    -------
+    [Fplus,Fcross]: list of floats
+        The first quantity is the beam-pattern coefficient for
+        orthogonal/plus polarisation, the second is for diagonal/cross
+        polarisation.
+    """
+    
+    #input type checking
+    for each_variable in locals().values():
+        assert type(each_variable) == float, 'All inputs should be floats.'
+    
+    Fplus = 0.5*(1 + np.cos(theta_d)**2)*np.cos(2*phi_d)*np.cos(2*psi_d) - \
+        np.cos(theta_d)*np.sin(2*phi_d)*np.sin(2*psi_d) #Cutler eq. 3.12a
+    Fcross = 0.5*(1 + np.cos(theta_d)**2)*np.cos(2*phi_d)*np.sin(2*psi_d) + \
+        np.cos(theta_d)*np.sin(2*phi_d)*np.cos(2*psi_d) #Cutler eq. 3.12b
+    
+    #output type conversion
+    Fplus = float(Fplus)
+    Fcross = float(Fcross)
+    
+    return [Fplus,Fcross]
