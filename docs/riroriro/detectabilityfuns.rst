@@ -72,7 +72,7 @@ theta: float
     The ecliptic latitude, one of the angles describing the direction of
     the line of sight to the gravitational wave source relative to the axes
     of the detector’s arms (sky-location coordinates of the binary). Ranges
-    from 0 to π/2 rad (90 deg).
+    from -π/2 to π/2 rad (-90 to 90 deg).
 phi: float
     The ecliptic longitude, one of the angles describing the direction of
     the line of sight to the gravitational wave source relative to the axes
