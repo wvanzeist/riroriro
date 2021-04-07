@@ -132,7 +132,7 @@ def specific_orientation_SNR(theta,phi,iota,psi,SNR_in,angle_unit='rad'):
         The ecliptic latitude, one of the angles describing the direction of
         the line of sight to the gravitational wave source relative to the axes
         of the detector’s arms (sky-location coordinates of the binary). Ranges
-        from 0 to π/2 rad (90 deg).
+        from -π/2 to π/2 rad (-90 to 90 deg).
     phi: float
         The ecliptic longitude, one of the angles describing the direction of
         the line of sight to the gravitational wave source relative to the axes
@@ -177,8 +177,8 @@ def specific_orientation_SNR(theta,phi,iota,psi,SNR_in,angle_unit='rad'):
         raise ValueError('angle_unit must be either \'rad\' or \'deg\'.')
     
     #checking input angles are within the expected ranges
-    assert 0 <= theta <= pi/2, ('theta should be between 0 and π/2 rad (90 '
-                                'deg).')
+    assert -pi/2 <= theta <= pi/2, ('theta should be between -π/2 and π/2 rad '
+                                    '(-90 to 90 deg).')
     assert 0 <= phi <= 2*pi, 'phi should be between 0 and 2π rad (360 deg).'
     assert 0 <= iota <= pi/2, 'iota should be between 0 and π/2 rad (90 deg).'
     assert 0 <= psi <= pi, 'psi should be between 0 and π rad (180 deg).'
