@@ -159,7 +159,8 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
 def wd_inclination(horth,hdiag,**kwargs):
     """
     Applies the effects of the binary's inclination on the strain values of a
-    white dwarf binary, based on Shah et al. (2012) equations 1,2.
+    white dwarf binary, based on Shah et al. (2012) equations 1,2 and Królak et
+    al. (2004) equation 16.
 
     Parameters
     ----------
@@ -199,14 +200,13 @@ def wd_inclination(horth,hdiag,**kwargs):
     
     if 'iota' in kwargs:
         #checking iota is within the expected range
-        assert 0 <= kwargs['iota'] <= np.pi/2, ('iota should be between 0 and '
-                                                'π/2 rad.')
+        assert 0 <= kwargs['iota'] <= np.pi, ('iota should be between 0 and π '
+                                              'rad.')
         cosiota = np.cos(kwargs['iota'])
-    
-    if 'cosiota' in kwargs:
+    elif 'cosiota' in kwargs:
         #checking cosiota is within the expected range
-        assert 0 <= kwargs['cosiota'] <= 1, ('cosiota should be between 0 and '
-                                             '1.')
+        assert -1 <= kwargs['cosiota'] <= 1, ('cosiota should be between -1 '
+                                              'and 1.')
         cosiota = kwargs['cosiota']
         
     #applying inclination to strain
@@ -237,14 +237,14 @@ def instantaneous_beam_pattern(theta_d,phi_d,psi_d):
     Parameters
     ----------
     theta_d: float
-        The ecliptic latitude, one of the angles describing the direction of
+        The relative latitude, one of the angles describing the direction of
         the line of sight to the gravitational wave source relative to the axes
         of the detector’s arms (sky-location coordinates of the binary). Ranges
-        from 0 to π/2 rad (90 deg).
+        from 0 to π rad (180 deg).
         This angle should be with respect to the detector's (rotating) frame
         of reference.
     phi_d: float
-        The ecliptic longitude, one of the angles describing the direction of
+        The relative longitude, one of the angles describing the direction of
         the line of sight to the gravitational wave source relative to the axes
         of the detector’s arms (sky-location coordinates of the binary). Ranges
         from 0 to 2π rad (360 deg).
