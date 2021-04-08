@@ -69,17 +69,17 @@ alignment, specified by four angles as in Finn (1996), Belczynski et al.
 Parameters
 ----------
 theta: float
-    The ecliptic latitude, one of the angles describing the direction of
+    The relative latitude, one of the angles describing the direction of
     the line of sight to the gravitational wave source relative to the axes
     of the detector’s arms (sky-location coordinates of the binary). Ranges
-    from -π/2 to π/2 rad (-90 to 90 deg).
+    from 0 to π rad (180 deg).
 phi: float
-    The ecliptic longitude, one of the angles describing the direction of
+    The relative longitude, one of the angles describing the direction of
     the line of sight to the gravitational wave source relative to the axes
     of the detector’s arms (sky-location coordinates of the binary). Ranges
     from 0 to 2π rad (360 deg).
 iota: float
-    The inclination angle of the binary. Ranges from 0 to π/2 rad (90 deg).
+    The inclination angle of the binary. Ranges from 0 to π rad (180 deg).
 psi: float
     The polarisation angle of the binary. Ranges from 0 to π (180 deg).
 SNR_in: float
