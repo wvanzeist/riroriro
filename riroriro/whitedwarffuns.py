@@ -222,6 +222,206 @@ def wd_inclination(horth,hdiag,**kwargs):
     
     return [adj_horth,adj_hdiag]
 
+def lisa_rotation(times,eta_0=0.0,xi_0=0.0):
+    """
+    Generates two time series of angles describing LISA's rotation over time,
+    including its rotation around the Sun and about its own axis, based on
+    Cutler (1998) equation 3.3 and Królak et al. (2004) pages 3 and 4.
+    
+    Parameters
+    ----------
+    times: list of floats
+        The times at which strain has been calculated, from wd_polarisations().
+    eta_0: float
+        The orbital phase of LISA around the Sun at t=0, in rad. Default: 0.0.
+    xi_0: float
+        The orbital phase of LISA around its own axis at t=0, in rad. Default:
+        0.0.
+        
+    Returns
+    -------
+    [eta,xi]: list of lists of floats
+        The first list is the orbital phases/angles of LISA around the Sun over
+        time, the second is the same for LISA's rotation around its own axis.
+    """
+    
+    #input type checking
+    assert type(times) == list, 'times should be a list.'
+    assert type(eta_0) == float, 'eta_0 should be a float.'
+    assert type(xi_0) == float, 'xi_0 should be a float.'
+    
+    #basic constants
+    pi=np.pi
+    year_to_sec=3.154e7
+    
+    eta = np.empty((len(times)))
+    xi = np.empty((len(times)))
+    for i in range(len(times)):
+        eta[i] = 2*pi*times[i]/year_to_sec + eta_0
+        xi[i] = -2*pi*times[i]/year_to_sec + xi_0           #note sign
+    
+    #output type conversion
+    eta = list(eta)
+    xi = list(xi)
+    
+    return [eta,xi]
+
+def wd_binary_vectors(theta_s,phi_s,iota,chi):
+    """
+    Defines two vectors that describe properties of a binary in a stationary
+    frame of reference, which are used for calculating the polarisation angle
+    in lisa_angle_conversion(). They are defined here for speed, as these
+    calculations do not need to be in the loop of lisa_angle_conversion().
+    
+    Parameters
+    ----------
+    theta_s: float
+        The ecliptic latitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary).
+        This angle should be given with respect to a stationary frame of
+        reference (celestial reference).
+    phi_s: float
+        The ecliptic longitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary).
+        This angle should be given with respect to a stationary frame of
+        reference (celestial reference).
+    iota: float
+        The inclination angle of the binary, in radians.
+        This angle is invariant between the stationary and rotating frames of
+        reference.
+    chi: float
+        An angle that relates to the ascending node of the binary, in radians.
+        This angle should be given with respect to a stationary frame of
+        reference (celestial reference).
+        
+    Returns
+    -------
+    [L,P]: list of lists of floats
+        The first list is the angular momentum vector, the second is the vector
+        of the cross product of the line of sight and the angular momentum
+        (giving the principal direction of orthogonal/plus polarisation).
+    """
+    
+    #input type checking
+    for each_variable in locals().values():
+        assert type(each_variable) == float, 'All inputs should be floats.'
+    
+    #components of L
+    Lx = (np.cos(chi) + np.cos(phi_s)**2*np.sin(theta_s)**2*(1 - np.cos(chi)))\
+        *np.cos(phi_s)*np.sin(theta_s + iota) + (0.5*np.sin(2*phi_s)* \
+        np.sin(theta_s)**2*(1 - np.cos(chi)) - np.cos(theta_s)*np.sin(chi)) \
+        *np.sin(phi_s)*np.sin(theta_s + iota) + (0.5*np.cos(phi_s)* \
+        np.sin(2*theta_s)*(1 - np.cos(chi)) + np.sin(phi_s)*np.sin(theta_s)* \
+        np.sin(chi))*np.cos(theta_s + iota)
+    Ly = (0.5*np.sin(2*phi_s)*np.sin(theta_s)**2*(1 - np.cos(chi)) + \
+        np.cos(theta_s)*np.sin(chi))*np.cos(phi_s)*np.sin(theta_s + iota) + \
+        (np.cos(chi) + np.sin(phi_s)**2*np.sin(theta_s)**2*(1 - np.cos(chi))) \
+        *np.sin(phi_s)*np.sin(theta_s + iota) + (0.5*np.sin(phi_s)* \
+        np.sin(2*theta_s)*(1 - np.cos(chi)) - np.cos(phi_s)*np.sin(theta_s)* \
+        np.sin(chi))*np.cos(theta_s + iota)
+    Lz = (0.5*np.cos(phi_s)*np.sin(2*theta_s)*(1 - np.cos(chi)) - \
+        np.sin(phi_s)*np.sin(theta_s)*np.sin(chi))*np.cos(phi_s)* \
+        np.sin(theta_s + iota) + (0.5*np.sin(phi_s)*np.sin(2*theta_s)*(1 - \
+        np.cos(chi)) + np.cos(phi_s)*np.sin(theta_s)*np.sin(chi)) \
+        *np.sin(phi_s)*np.sin(theta_s + iota) + (np.cos(chi) + \
+        np.cos(theta_s)**2*(1 - np.cos(chi)))*np.cos(theta_s + iota)
+    
+    #components of P
+    Px = np.sin(phi_s)*np.sin(theta_s)*Lz - np.cos(theta_s)*Ly
+    Py = np.cos(theta_s)*Lx - np.cos(phi_s)*np.sin(theta_s)*Lz
+    Pz = np.cos(phi_s)*np.sin(theta_s)*Ly - np.sin(phi_s)*np.sin(theta_s)*Lx
+    
+    #collecting components into lists representing vectors
+    L = [Lx,Ly,Lz]
+    P = [Px,Py,Pz]
+    
+    return [L,P]
+
+def lisa_angle_conversion(theta_s,phi_s,iota,eta,xi,L,P):
+    """
+    Converts three angles (that are used for calculating LISA's response to a
+    signal) from a stationary frame of reference to one that follows LISA's
+    rotation, based on Cutler (1998) equation 3.4 and Królak et al. (2004)
+    equation 6 with zeta = -π/6.
+    
+    Parameters
+    ----------
+    theta_s: float
+        The ecliptic latitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary).
+        This angle should be given with respect to a stationary frame of
+        reference (celestial reference).
+    phi_s: float
+        The ecliptic longitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary).
+        This angle should be given with respect to a stationary frame of
+        reference (celestial reference).
+    iota: float
+        The inclination angle of the binary, in radians.
+        This angle is invariant between the stationary and rotating frames of
+        reference.
+    eta: list of floats
+        The orbital phases/angles of LISA around the Sun over time, from
+        lisa_rotation().
+        Not to be confused with the symmetric mass ratio, which also has the
+        symbol eta.
+    xi: list of floats
+        The orbital phases/angles of LISA around its own axis over time, from
+        lisa_rotation().
+    L: list of floats
+    P: list of floats
+        
+    Returns
+    -------
+    [theta,phi,psi]: list of lists of floats
+        The first list is the values of latitude with respect to LISA's
+        rotating frame of reference at each timestep, the second is the
+        corresponding longitudes and the third is the polarisation angles.
+    """
+    
+    #input type checking
+    assert type(theta_s) == float, 'theta_s should be a float.'
+    assert type(phi_s) == float, 'phi_s should be a float.'
+    assert type(iota) == float, 'iota should be a float.'
+    assert type(eta) == list, 'eta should be a list.'
+    assert type(xi) == list, 'xi should be a list.'
+    assert type(L) == list, 'L should be a list.'
+    assert type(P) == list, 'P should be a list.'
+    
+    theta = np.empty((len(eta)))
+    phi = np.empty((len(eta)))
+    psi = np.empty((len(eta)))
+    
+    for i in range(len(eta)):
+        theta[i] = np.arccos(0.5*(-np.sqrt(3)*np.cos(eta[i])*np.cos(phi_s)* \
+            np.sin(theta_s) - np.sqrt(3)*np.sin(eta[i])*np.sin(phi_s)* \
+            np.sin(theta_s) + np.cos(theta_s)))
+        phi[i] = np.arctan2((-np.sin(eta[i])*np.sin(xi[i]) + \
+            0.5*np.cos(eta[i])*np.cos(xi[i]))*np.cos(phi_s)*np.sin(theta_s) + \
+            (np.cos(eta[i])*np.sin(xi[i]) + 0.5*np.sin(eta[i])*np.cos(xi[i])) \
+            *np.sin(phi_s)*np.sin(theta_s) + 0.5*np.sqrt(3)*np.cos(xi[i])* \
+            np.cos(theta_s), \
+            (np.sin(eta[i])*np.cos(xi[i]) + 0.5*np.cos(eta[i])*np.sin(xi[i])) \
+            *np.cos(phi_s)*np.sin(theta_s) + (-np.cos(eta[i])*np.cos(xi[i]) + \
+            0.5*np.sin(eta[i])*np.sin(xi[i]))*np.sin(phi_s)*np.sin(theta_s) + \
+            0.5*np.sqrt(3)*np.sin(xi[i])*np.cos(theta_s)) #"y", then "x"
+        #check handedness
+        psi[i] = np.arctan2(0.5*(-np.sqrt(3)*np.cos(eta[i])*L[0] - np.sqrt(3) \
+            *np.sin(eta[i])*L[1] + L[2]) - np.cos(iota)*np.cos(theta[i]), \
+            0.5*(-np.sqrt(3)*np.cos(eta[i])*P[0] - np.sqrt(3)*np.sin(eta[i]) \
+            *P[1] + P[2]))
+    
+    #output type conversion
+    theta = list(theta)
+    phi = list(phi)
+    psi = list(psi)
+    
+    return [theta,phi,psi]
+
 def instantaneous_beam_pattern(theta_d,phi_d,psi_d):
     """
     Outputs coefficients, known as the detector beam-pattern coefficients,
