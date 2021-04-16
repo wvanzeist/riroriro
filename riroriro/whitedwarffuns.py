@@ -344,7 +344,8 @@ def lisa_angle_conversion(theta_s,phi_s,iota,eta,xi,L,P):
     Converts three angles (that are used for calculating LISA's response to a
     signal) from a stationary frame of reference to one that follows LISA's
     rotation, based on Cutler (1998) equation 3.4 and Królak et al. (2004)
-    equation 6 with zeta = -π/6.
+    equation 6 with zeta = -π/6 (for theta and phi) and a derivation from
+    Apostolatos et al. (1994) equation 5 (for psi).
     
     Parameters
     ----------
@@ -373,7 +374,12 @@ def lisa_angle_conversion(theta_s,phi_s,iota,eta,xi,L,P):
         The orbital phases/angles of LISA around its own axis over time, from
         lisa_rotation().
     L: list of floats
+        The three-dimensional vector of the angular momentum of the binary,
+        from wd_binary_vectors().
     P: list of floats
+        The three-dimensional vector of the principal direction of orthogonal/
+        plus polarisation (equal to the vector cross product of the line of
+        sight and the angular momentum), from wd_binary_vectors().
         
     Returns
     -------
