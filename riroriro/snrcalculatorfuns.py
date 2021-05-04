@@ -6,6 +6,7 @@ Parts of the procedure for calculating the SNR of a gravitational waveform
 """
 
 import numpy as np
+from scipy.interpolate import interp1d
 
 def polynomial_redshift(d):
     """
@@ -196,8 +197,6 @@ def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
         Waveform amplitudes as in fourieramp, but over the set of frequencies
         in noisearray rather than those in inputarray.
     """
-    
-    from scipy.interpolate import interp1d
     
     #input type checking
     assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
