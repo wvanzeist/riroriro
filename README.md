@@ -25,3 +25,22 @@ The central website of BPASS, which also contains links to related programs, can
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02968/status.svg)](https://doi.org/10.21105/joss.02968)
 
 A paper describing Riroriro has been published in the Journal of Open Source Software. If you use Riroriro in your work, please cite this paper! https://doi.org/10.21105/joss.02968
+
+    @ARTICLE{2021JOSS....6.2968V,
+           author = {{van Zeist}, Wouter G.~J. and {Stevance}, H{\'e}lo{\"i}se F. and {Eldridge}, J.~J.},
+            title = "{Riroriro: Simulating gravitational waves and evaluating their detectability in Python}",
+          journal = {The Journal of Open Source Software},
+         keywords = {Python, neutron stars, astronomy, gravitational waves, black holes, General Relativity and Quantum Cosmology, Astrophysics - High Energy Astrophysical Phenomena},
+             year = 2021,
+            month = mar,
+           volume = {6},
+           number = {59},
+              eid = {2968},
+            pages = {2968},
+              doi = {10.21105/joss.02968},
+    archivePrefix = {arXiv},
+           eprint = {2103.06943},
+     primaryClass = {gr-qc},
+           adsurl = {https://ui.adsabs.harvard.edu/abs/2021JOSS....6.2968V},
+          adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+    }

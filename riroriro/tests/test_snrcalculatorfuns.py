@@ -6,6 +6,7 @@ Unit tests for the snrcalculatorfuns module.
 
 import numpy as np
 import pytest
+import urllib.request
 import riroriro.snrcalculatorfuns as snr
 
 def test_snrcalculatorfuns_errors():
@@ -29,8 +30,6 @@ def test_snrcalculatorfuns_numerical():
     Testing whether the SNR-calculating functions behave as expected for a
     given waveform data file.
     """
-    
-    import urllib.request
     
     #we load in the three files of example data; ideally np.genfromtxt would be
     #used for this but these files are stored on the riroriro_tutorials github

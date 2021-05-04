@@ -20,13 +20,13 @@ def test_detectabilityfuns_errors():
         det.specific_orientation_SNR('foo',0.1,0.1,0.1,20.0)
         
     with pytest.raises(AssertionError):
-        det.specific_orientation_SNR(2.0,0.1,0.1,0.1,20.0)
+        det.specific_orientation_SNR(4.0,0.1,0.1,0.1,20.0)
         
     with pytest.raises(AssertionError):
         det.specific_orientation_SNR(0.1,7.0,0.1,0.1,20.0)
         
     with pytest.raises(AssertionError):
-        det.specific_orientation_SNR(0.1,0.1,2.0,0.1,20.0)
+        det.specific_orientation_SNR(0.1,0.1,4.0,0.1,20.0)
         
     with pytest.raises(AssertionError):
         det.specific_orientation_SNR(0.1,0.1,0.1,4.0,20.0)
