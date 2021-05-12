@@ -483,3 +483,141 @@ def instantaneous_beam_pattern(theta_d,phi_d,psi_d):
     Fcross = float(Fcross)
     
     return [Fplus,Fcross]
+
+def lisa_beam_pattern(theta,phi,psi):
+    """
+    Evaluates instantaneous_beam_pattern() for each timestep in the white dwarf
+    binary simulation, giving the beam pattern coefficients over time.
+    
+    Parameters
+    ----------
+    theta: list of floats
+        The source's latitude with respect to LISA's rotating frame of
+        reference at each timestep, from lisa_angle_conversion().
+    phi: list of floats
+        The source's longitude with respect to LISA's rotating frame of
+        reference at each timestep, from lisa_angle_conversion().
+    psi: list of floats
+        The source's polarisation angle in LISA's rotating frame of reference,
+        from lisa_angle_conversion().
+        
+    Returns
+    -------
+    [Fplus_t,Fcross_t]: list of lists of floats
+        The first list is the beam-pattern coefficients for orthogonal/plus
+        polarisation at each time step, the second is the diagonal/cross
+        polarisation coefficients.
+    """
+    
+    #input type checking
+    for each_variable in locals().values():
+        assert type(each_variable) == list, 'All inputs should be lists.'
+        
+    Fplus_t = np.empty((len(theta)))
+    Fcross_t = np.empty((len(theta)))
+    
+    #instantaneous_beam_pattern() for each timestep
+    for i in range(len(theta)):
+        Fplus_t[i], Fcross_t[i] = instantaneous_beam_pattern(theta[i],phi[i], \
+                                                             psi[i])
+    
+    #output type conversion
+    Fplus_t = list(Fplus_t)
+    Fcross_t = list(Fcross_t)
+    
+    return [Fplus_t,Fcross_t]
+
+def lisa_phase_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
+    """
+    Calculates coefficients describing the phase modulation that affects LISA's
+    response to an incoming GW signal, based on Cutler (1998) equation 3.15b/
+    Cornish et al. (2003) equation 5.
+    
+    Parameters
+    ----------
+    adj_horth: list of floats
+        The inclination-adjusted orthogonal/plus polarisation of strain over
+        time, from wd_inclination().
+    adj_hdiag: list of floats
+        The inclination-adjusted diagonal/cross polarisation of strain over
+        time, from wd_inclination().
+    Fplus_t: list of floats
+        The detector beam-pattern coefficients for orthogonal/plus polarisation
+        over time, from lisa_beam_pattern().
+    Fcross_t: list of floats
+        The detector beam-pattern coefficients for diagonal/cross polarisation
+        over time, from lisa_beam_pattern().
+        
+    Returns
+    -------
+    varphi_p: list of floats
+        The phase modulation coefficients at each timestep.
+    """
+    
+    #input type checking
+    for each_variable in locals().values():
+        assert type(each_variable) == list, 'All inputs should be lists.'
+        
+    varphi_p = np.empty((len(adj_horth)))
+    for i in range(len(varphi_p)):
+        varphi_p[i] = -np.arctan2(adj_hdiag[i]*Fcross_t[i], \
+                                  adj_horth[i]*Fplus_t[i])
+            
+    #output type conversion
+    varphi_p = list(varphi_p)
+    
+    return varphi_p
+
+def lisa_frequency_modulation(times,freq,theta_s,phi_s):
+    """
+    Calculates coefficients describing the frequency (Doppler) modulation that
+    affects LISA's response to an incoming GW signal, based on Cutler (1998)
+    equation 3.15c/Cornish et al. (2003) equation 4.
+    
+    Parameters
+    ----------
+    times: list of floats
+        The times at which strain has been calculated, from wd_polarisations().
+    freq: float
+        The orbital frequency of the binary (at t=0), in Hz.
+    theta_s: float
+        The ecliptic latitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary).
+        This angle should be given with respect to a stationary frame of
+        reference (celestial reference).
+    phi_s: float
+        The ecliptic longitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary).
+        This angle should be given with respect to a stationary frame of
+        reference (celestial reference).
+        
+    Returns
+    -------
+    varphi_d: list of floats
+        The frequency (Doppler) modulation coefficients at each timestep.
+    """
+    
+    #input type checking
+    assert type(times) == list, 'times should be a list.'
+    assert type(freq) == float, 'freq should be a float.'
+    assert type(theta_s) == float, 'theta_s should be a float.'
+    assert type(phi_s) == float, 'phi_s should be a float.'
+    
+    #basic constants
+    pi=np.pi
+    c=2.99792458e8 #m s^-1
+    year_to_sec=3.154e7
+    AU_to_m=1.495978707e11
+    
+    #Cornish eq. 4 calculation
+    varphi_d = np.empty((len(times)))
+    for i in range(len(times)):
+        varphi_d[i] = 2*pi*freq*(AU_to_m/c)*np.sin(theta_s)*np.cos(2*pi* \
+            times[i]/year_to_sec - phi_s)
+    
+    #output type conversion
+    varphi_d = list(varphi_d)
+    
+    return varphi_d
