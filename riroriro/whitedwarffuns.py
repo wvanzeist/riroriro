@@ -293,6 +293,7 @@ def wd_binary_vectors(theta_s,phi_s,iota,chi):
         reference.
     chi: float
         An angle that relates to the ascending node of the binary, in radians.
+        It seems to be equivalent to the angle of the ascending node ± π/2.
         This angle should be given with respect to a stationary frame of
         reference (celestial reference).
         
@@ -621,3 +622,99 @@ def lisa_frequency_modulation(times,freq,theta_s,phi_s):
     varphi_d = list(varphi_d)
     
     return varphi_d
+
+def lisa_amplitude_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
+    """
+    Applies the amplitude modulation that affects LISA's response to the strain
+    amplitude of an incoming GW signal, based on Cutler (1998) equation 3.15a/
+    Cornish et al. (2003) equation 3.
+    
+    Parameters
+    ----------
+    adj_horth: list of floats
+        The inclination-adjusted orthogonal/plus polarisation of strain over
+        time, from wd_inclination().
+    adj_hdiag: list of floats
+        The inclination-adjusted diagonal/cross polarisation of strain over
+        time, from wd_inclination().
+    Fplus_t: list of floats
+        The detector beam-pattern coefficients for orthogonal/plus polarisation
+        over time, from lisa_beam_pattern().
+    Fcross_t: list of floats
+        The detector beam-pattern coefficients for diagonal/cross polarisation
+        over time, from lisa_beam_pattern().
+    
+    Returns
+    -------
+    A_mod: list of floats
+        The strain amplitude of the gravitational wave signal with modulation
+        applied, at each timestep.
+    """
+    
+    #input type checking
+    for each_variable in locals().values():
+        assert type(each_variable) == list, 'All inputs should be lists.'
+        
+    A_mod = np.empty((len(adj_horth)))
+    for i in range(len(A_mod)):
+        A_mod[i] = np.sqrt((adj_horth[i]*Fplus_t[i])**2 + (adj_hdiag[i]* \
+                                                           Fcross_t[i])**2)
+    
+    #output type conversion
+    A_mod = list(A_mod)
+    
+    return A_mod
+
+def lisa_detector_response(times,A_mod,varphi_d,varphi_p,freq,init_phase=0.0):
+    """
+    For an incoming GW signal, calculates LISA's detector response (the strain
+    observed in the detector) to that signal, based on Cornish et al. (2003)
+    equations 1,2/Shah et al. (2012) equations 6,8.
+    This form is valid if the change of frequency of the binary over the
+    duration of the observation is much smaller than the frequency itself;
+    otherwise, the more complicated (and time-consuming to evaluate) Cutler
+    (1998) equation 3.14 would need to be used.
+    
+    Parameters
+    ----------
+    times: list of floats
+        The times at which strain has been calculated, from wd_polarisations().
+    A_mod: list of floats
+        The modulation-adjusted strain amplitude of the gravitational wave
+        signal over time, from lisa_amplitude_modulation().
+    varphi_d: list of floats
+        The frequency (Doppler) modulation coefficients at each timestep, from
+        lisa_frequency_modulation().
+    varphi_p: list of floats
+        The phase modulation coefficients at each timestep, from
+        lisa_phase_modulation().
+    freq: float
+        The orbital frequency of the binary (at t=0), in Hz.
+    init_phase: float
+        The phase angle of the signal at t=0. Default: 0.0.
+        
+    Returns
+    -------
+    A_lisa: list of floats
+        The strain amplitude of the GW signal over time as it is detected by
+        LISA, account for the various time-varying factors affecting LISA's
+        response.
+    """
+    
+    #input type checking
+    assert type(times) == list, 'times should be a list.'
+    assert type(A_mod) == list, 'A_mod should be a list.'
+    assert type(varphi_d) == list, 'varphi_d should be a list.'
+    assert type(varphi_p) == list, 'varphi_p should be a list.'
+    assert type(freq) == float, 'freq should be a float.'
+    assert type(init_phase) == float, 'init_phase should be a float.'
+    
+    A_lisa = np.empty((len(times)))
+    for i in range(len(times)):
+        A_lisa[i] = A_mod[i]*np.cos(2*np.pi*freq*times[i] + init_phase + \
+                                    varphi_d[i] + varphi_p[i])
+            
+    #output type conversion
+    A_lisa = list(A_lisa)
+    
+    return A_lisa
