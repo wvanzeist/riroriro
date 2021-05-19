@@ -136,7 +136,9 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
     #the freq_dot equation does not need to be integrated to obtain freq as
     #long as freq >> freq_dot
     
-    no_of_samples = int(np.ceil(T_sim * 8*freq))
+    no_of_samples = int(np.ceil(T_sim * 8*freq)) + 1
+    #+1 needed because the times list will include both the start and end
+    #points of the range
     #sampling at t=0 Nyquist frequency times 4
     times = np.linspace(0,T_sim,no_of_samples) #times to calculate strain at
     
