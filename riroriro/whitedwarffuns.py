@@ -470,9 +470,7 @@ def instantaneous_beam_pattern(theta_d,phi_d,psi_d):
         polarisation.
     """
     
-    #input type checking
-    for each_variable in locals().values():
-        assert type(each_variable) == float, 'All inputs should be floats.'
+    #no input checks here because lisa_beam_pattern() already includes them
     
     Fplus = 0.5*(1 + np.cos(theta_d)**2)*np.cos(2*phi_d)*np.cos(2*psi_d) - \
         np.cos(theta_d)*np.sin(2*phi_d)*np.sin(2*psi_d) #Cutler eq. 3.12a
