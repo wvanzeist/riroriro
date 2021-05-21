@@ -158,11 +158,70 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
     
     return [times,h_orth,h_diag]
 
-def wd_inclination(horth,hdiag,**kwargs):
+def wd_inclination(amp,**kwargs):
     """
-    Applies the effects of the binary's inclination on the strain values of a
-    white dwarf binary, based on Shah et al. (2012) equations 1,2 and Królak et
-    al. (2004) equation 16.
+    Applies the effects of the binary's inclination of the strain amplitude of
+    a white dwarf binary, based on Królak et al. (2004) equation 16.
+    
+    Parameters
+    ----------
+    amp: float
+        The strain amplitude of the gravitational wave signal emitted by the
+        binary (unitless), from wd_amplitude().
+    **kwargs: The inclination of the binary, expressed as either:
+        iota: float
+            The inclination angle, in radians.
+        cosiota: float
+            The cosine of the inclination angle.
+            
+    Returns
+    -------
+    [amp_orth,amp_diag]: list of floats
+        The first value is the adjusted strain amplitude for the
+        orthogonal/plus polarisation, the second is for the diagonal/cross
+        polarisation.
+    """
+    
+    #input type checking
+    assert type(amp) == float, 'amp should be a float.'
+    for each_variable in kwargs.values():
+        assert type(each_variable) == float, ('The inclination should be a '
+                                              'float.')
+    
+    #making sure the user specifies at least one of iota and cosiota
+    if not ('iota' in kwargs or 'cosiota' in kwargs):
+        raise TypeError('Please specify iota or cosiota.')
+        
+    #making sure the user doesn't specify both iota and cosiota
+    if 'iota' in kwargs and 'cosiota' in kwargs:
+        raise TypeError('Please specify either iota or cosiota, not both.')
+    
+    if 'iota' in kwargs:
+        #checking iota is within the expected range
+        assert 0 <= kwargs['iota'] <= np.pi, ('iota should be between 0 and π '
+                                              'rad.')
+        cosiota = np.cos(kwargs['iota'])
+    elif 'cosiota' in kwargs:
+        #checking cosiota is within the expected range
+        assert -1 <= kwargs['cosiota'] <= 1, ('cosiota should be between -1 '
+                                              'and 1.')
+        cosiota = kwargs['cosiota']
+        
+    amp_orth = 0.5*(1 + cosiota**2) * amp
+    amp_diag = cosiota * amp
+    
+    #output type conversion
+    amp_orth = float(amp_orth)
+    amp_diag = float(amp_diag)
+    
+    return [amp_orth,amp_diag]
+
+def wd_inclination_polarisations(horth,hdiag,**kwargs):
+    """
+    Similar to wd_inclination(), but instead of applying the inclination to a
+    single amplitude value, this applies it to the values of the two
+    polarisations of strain over time, based on Shah et al. (2012) equations
+    1,2 and Królak et al. (2004) equation 16.
 
     Parameters
     ----------
@@ -528,7 +587,7 @@ def lisa_beam_pattern(theta,phi,psi):
     
     return [Fplus_t,Fcross_t]
 
-def lisa_phase_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
+def lisa_phase_modulation(Fplus_t,Fcross_t,amp_orth,amp_diag):
     """
     Calculates coefficients describing the phase modulation that affects LISA's
     response to an incoming GW signal, based on Cutler (1998) equation 3.15b/
@@ -536,18 +595,18 @@ def lisa_phase_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
     
     Parameters
     ----------
-    adj_horth: list of floats
-        The inclination-adjusted orthogonal/plus polarisation of strain over
-        time, from wd_inclination().
-    adj_hdiag: list of floats
-        The inclination-adjusted diagonal/cross polarisation of strain over
-        time, from wd_inclination().
     Fplus_t: list of floats
         The detector beam-pattern coefficients for orthogonal/plus polarisation
         over time, from lisa_beam_pattern().
     Fcross_t: list of floats
         The detector beam-pattern coefficients for diagonal/cross polarisation
         over time, from lisa_beam_pattern().
+    amp_orth: float
+        The inclination-adjusted orthogonal/plus polarisation of the strain
+        amplitude, from wd_inclination().
+    amp_diag: float
+        The inclination-adjusted diagonal/cross polarisation of the strain
+        amplitude, from wd_inclination().
         
     Returns
     -------
@@ -556,13 +615,14 @@ def lisa_phase_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
     """
     
     #input type checking
-    for each_variable in locals().values():
-        assert type(each_variable) == list, 'All inputs should be lists.'
+    assert type(Fplus_t) == list, 'Fplus_t should be a list.'
+    assert type(Fcross_t) == list, 'Fcross_t should be a list.'
+    assert type(amp_orth) == float, 'amp_orth should be a float.'
+    assert type(amp_diag) == float, 'amp_diag should be a float.'
         
-    varphi_p = np.empty((len(adj_horth)))
+    varphi_p = np.empty((len(Fplus_t)))
     for i in range(len(varphi_p)):
-        varphi_p[i] = -np.arctan2(adj_hdiag[i]*Fcross_t[i], \
-                                  adj_horth[i]*Fplus_t[i])
+        varphi_p[i] = -np.arctan2(amp_diag*Fcross_t[i], amp_orth*Fplus_t[i])
             
     #output type conversion
     varphi_p = list(varphi_p)
@@ -623,7 +683,7 @@ def lisa_frequency_modulation(times,freq,theta_s,phi_s):
     
     return varphi_d
 
-def lisa_amplitude_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
+def lisa_amplitude_modulation(Fplus_t,Fcross_t,amp_orth,amp_diag):
     """
     Applies the amplitude modulation that affects LISA's response to the strain
     amplitude of an incoming GW signal, based on Cutler (1998) equation 3.15a/
@@ -631,18 +691,18 @@ def lisa_amplitude_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
     
     Parameters
     ----------
-    adj_horth: list of floats
-        The inclination-adjusted orthogonal/plus polarisation of strain over
-        time, from wd_inclination().
-    adj_hdiag: list of floats
-        The inclination-adjusted diagonal/cross polarisation of strain over
-        time, from wd_inclination().
     Fplus_t: list of floats
         The detector beam-pattern coefficients for orthogonal/plus polarisation
         over time, from lisa_beam_pattern().
     Fcross_t: list of floats
         The detector beam-pattern coefficients for diagonal/cross polarisation
         over time, from lisa_beam_pattern().
+    amp_orth: float
+        The inclination-adjusted orthogonal/plus polarisation of the strain
+        amplitude, from wd_inclination().
+    amp_diag: float
+        The inclination-adjusted diagonal/cross polarisation of the strain
+        amplitude, from wd_inclination().
     
     Returns
     -------
@@ -652,12 +712,14 @@ def lisa_amplitude_modulation(adj_horth,adj_hdiag,Fplus_t,Fcross_t):
     """
     
     #input type checking
-    for each_variable in locals().values():
-        assert type(each_variable) == list, 'All inputs should be lists.'
+    assert type(Fplus_t) == list, 'Fplus_t should be a list.'
+    assert type(Fcross_t) == list, 'Fcross_t should be a list.'
+    assert type(amp_orth) == float, 'amp_orth should be a float.'
+    assert type(amp_diag) == float, 'amp_diag should be a float.'
         
-    A_mod = np.empty((len(adj_horth)))
+    A_mod = np.empty((len(Fplus_t)))
     for i in range(len(A_mod)):
-        A_mod[i] = np.sqrt((adj_horth[i]*Fplus_t[i])**2 + (adj_hdiag[i]* \
+        A_mod[i] = np.sqrt((amp_orth*Fplus_t[i])**2 + (amp_diag* \
                                                            Fcross_t[i])**2)
     
     #output type conversion
@@ -669,7 +731,8 @@ def lisa_detector_response(times,A_mod,varphi_d,varphi_p,freq,init_phase=0.0):
     """
     For an incoming GW signal, calculates LISA's detector response (the strain
     observed in the detector) to that signal, based on Cornish et al. (2003)
-    equations 1,2/Shah et al. (2012) equations 6,8.
+    equations 1,2 (also Shah et al. (2012) equations 6,8, though the form given
+    there does not correctly match that of Cornish).
     This form is valid if the change of frequency of the binary over the
     duration of the observation is much smaller than the frequency itself;
     otherwise, the more complicated (and time-consuming to evaluate) Cutler
