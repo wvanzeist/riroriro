@@ -21,7 +21,7 @@ def test_whitedwarffuns_errors():
         wdf.characteristic_strain(1.0,1.0,[])
         
     with pytest.raises(AssertionError):
-        wdf.wd_polarisations(1.0,1.0,1.0,1.0,1.0,1.0)
+        wdf.wd_polarisations(1.0,1.0,1.0,1.0,1.0,1.0,1.0)
         
     with pytest.raises(AssertionError):
         wdf.wd_inclination([1.0],cosiota=1.0)

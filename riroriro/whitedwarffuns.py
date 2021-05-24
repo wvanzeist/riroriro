@@ -75,7 +75,8 @@ def characteristic_strain(amp,freq,T_obs):
     
     return hc
 
-def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
+def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,sampling_freq=None, \
+                     chirp=False):
     """
     Calculates the values of the two polarisation of strain for a non-chirping
     or weakly chirping white dwarf binary, based on Shah et al. (2012)
@@ -95,6 +96,10 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
         The length of time to simulate the binary's waveform for, in sec.
     init_phase: float
         The orbital phase of the binary at t=0, in rad. Default: 0.0.
+    sampling_freq: float or None
+        The frequency at which measurements of the strain are to be taken. If
+        not specified (set as None) the default sampling frequency is four
+        times the Nyquist frequency.
     chirp: bool
         If False, binary is simulated as monochromatic (non-chirping). If True,
         a weakly chirping binary is simulated via Shah et al. (2012) equation
@@ -115,6 +120,9 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
     assert type(T_sim) == float, 'T_sim should be a float.'
     assert type(init_phase) == float, 'init_phase should be a float.'
     assert type(chirp) == bool, 'chirp should be a bool.'
+    if sampling_freq is not None:
+        assert type(sampling_freq) == float, ('sampling_freq should be a float'
+                                              ' (or None).')
     
     #basic constants
     pi=np.pi
@@ -136,10 +144,14 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,chirp=False):
     #the freq_dot equation does not need to be integrated to obtain freq as
     #long as freq >> freq_dot
     
-    no_of_samples = int(np.ceil(T_sim * 8*freq)) + 1
+    if sampling_freq is not None:
+        no_of_samples = int(np.ceil(T_sim * sampling_freq)) + 1
+        #using the specified sampling frequency
+    else:
+        no_of_samples = int(np.ceil(T_sim * 8*freq)) + 1
+        #sampling at t=0 Nyquist frequency times 4
     #+1 needed because the times list will include both the start and end
     #points of the range
-    #sampling at t=0 Nyquist frequency times 4
     times = np.linspace(0,T_sim,no_of_samples) #times to calculate strain at
     
     h_orth = np.empty((no_of_samples))          #orthogonal/plus polarisation
