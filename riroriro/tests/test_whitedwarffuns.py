@@ -53,6 +53,21 @@ def test_whitedwarffuns_errors():
     with pytest.raises(AssertionError):
         wdf.wd_binary_vectors(1.0,1.0,1.0,[])
         
+    with pytest.raises(AssertionError):
+        wdf.lisa_rotation(1.0,[1.0],[1.0])
+    
+    with pytest.raises(AssertionError):
+        wdf.lisa_phase_modulation([1.0],[1.0],[1.0],[1.0])
+    
+    with pytest.raises(AssertionError):
+        wdf.lisa_frequency_modulation([1.0],1.0,[1.0],1.0)
+        
+    with pytest.raises(AssertionError):
+        wdf.lisa_amplitude_modulation([1.0],[1.0],[1.0],[1.0])
+        
+    with pytest.raises(AssertionError):
+        wdf.lisa_detector_response([1.0],[1.0],[1.0],[1.0],[1.0])
+        
     print('test_whitedwarffuns_errors completed successfully')
     
 def test_whitedwarffuns_numerical():

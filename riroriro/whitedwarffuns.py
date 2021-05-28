@@ -17,7 +17,7 @@ def wd_amplitude(Mc,freq,d):
     Mc: float
         The chirp mass of the binary, in solar masses.
     freq: float
-        The orbital frequency of the binary, in Hz.
+        The gravitational wave frequency of the binary, in Hz.
     d: float
         The distance to the binary, in pc.
         
@@ -57,7 +57,7 @@ def characteristic_strain(amp,freq,T_obs):
         The strain amplitude of the gravitational wave signal emitted by the
         binary (unitless), from wd_amplitude().
     freq: float
-        The orbital frequency of the binary, in Hz.
+        The gravitational wave frequency of the binary, in Hz.
     T_obs: float
         The length of time for which the binary is observed, in sec.
         
@@ -89,7 +89,7 @@ def wd_polarisations(Mc,freq,d,T_sim,init_phase=0.0,sampling_freq=None, \
     Mc: float
         The chirp mass of the binary, in solar masses.
     freq: float
-        The orbital frequency of the binary (at t=0), in Hz.
+        The gravitational wave frequency of the binary (at t=0), in Hz.
     d: float
         The distance to the binary, in pc.
     T_sim: float
@@ -570,8 +570,8 @@ def lisa_beam_pattern(theta,phi,psi):
         The source's longitude with respect to LISA's rotating frame of
         reference at each timestep, from lisa_angle_conversion().
     psi: list of floats
-        The source's polarisation angle in LISA's rotating frame of reference,
-        from lisa_angle_conversion().
+        The source's polarisation angle in LISA's rotating frame of reference
+        at each timestep, from lisa_angle_conversion().
         
     Returns
     -------
@@ -652,7 +652,7 @@ def lisa_frequency_modulation(times,freq,theta_s,phi_s):
     times: list of floats
         The times at which strain has been calculated, from wd_polarisations().
     freq: float
-        The orbital frequency of the binary (at t=0), in Hz.
+        The gravitational wave frequency of the binary (at t=0), in Hz.
     theta_s: float
         The ecliptic latitude, one of the angles describing the direction of
         the line of sight to the gravitational wave source relative to the axes
@@ -764,7 +764,7 @@ def lisa_detector_response(times,A_mod,varphi_d,varphi_p,freq,init_phase=0.0):
         The phase modulation coefficients at each timestep, from
         lisa_phase_modulation().
     freq: float
-        The orbital frequency of the binary (at t=0), in Hz.
+        The gravitational wave frequency of the binary (at t=0), in Hz.
     init_phase: float
         The phase angle of the signal at t=0. Default: 0.0.
         
