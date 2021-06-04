@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Functions for evaluating the gravitational waves emitted by non-chirping or
-weakly chirping white dwarf binaries (for LISA).
+weakly chirping white dwarf binaries, and LISA's response to these signals.
 """
 
 import numpy as np

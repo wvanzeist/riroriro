@@ -16,4 +16,5 @@ This is the documentation for the functions of riroriro. Tutorials for the usage
   riroriro/snrcalculatorfuns.rst
   riroriro/horizondistfuns.rst
   riroriro/detectabilityfuns.rst
+  riroriro/whitedwarffuns.rst
   riroriro/tests.rst
