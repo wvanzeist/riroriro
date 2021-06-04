@@ -103,7 +103,7 @@ Parameters
 amp: float
     The strain amplitude of the gravitational wave signal emitted by the
     binary (unitless), from wd_amplitude().
-**kwargs: The inclination of the binary, expressed as either:
+kwargs: The inclination of the binary, expressed as either:
     iota: float
         The inclination angle, in radians.
     cosiota: float
@@ -134,7 +134,7 @@ horth: list of floats
 hdiag: list of floats
     The diagonal/cross polarisation of strain over time, from
     wd_polarisations().
-**kwargs: The inclination of the binary, expressed as either:
+kwargs: The inclination of the binary, expressed as either:
     iota: float
         The inclination angle, in radians.
     cosiota: float
