@@ -122,3 +122,66 @@ Returns
 i_m_amp: list of floats
     The values of the amplitude of the GW strain over time for the entire
     duration of the gravitational waveform.
+
+merger_polarisations
+====================
+
+``merger_polarisations(final_i_index,m_amp,m_phase,i_Aorth)``
+
+Calculating the values of the two polarisations of strain for the merger.
+
+Parameters
+----------
+final_i_index: int
+    The last index in the inspiral data before the switch to the merger/
+    ringdown, from final_i_index_finder() in matchingfuns.
+m_amp: list of floats
+    The values of the amplitude of the GW strain over time for the
+    merger/ringdown portion, from merger_strain_amplitude().
+m_phase: list of floats
+    Values of orbital phase over time for the merger/ringdown portion, from
+    merger_phase_calculation().
+i_Aorth: list of floats
+    The values of the orthogonal/plus polarisation of strain over time for
+    the inspiral portion, from inspiral_strain_polarisations() in
+    inspiralfuns.
+    
+Returns
+-------
+[m_Aorth,m_Adiag]: list of lists of floats
+    The first list is the values of the orthogonal/plus polarisation of
+    strain over time, the second list is the diagonal/cross polarisation.
+
+polarisation_stitching
+======================
+
+``polarisation_stitching(final_i_index,i_Aorth,i_Adiag,m_Aorth,m_Adiag)``
+
+Stitching together the inspiral and merger/ringdown portions of the
+polarisation lists to give combined lists with the correct matching.
+
+Parameters
+----------
+final_i_index: int
+    The last index in the inspiral data before the switch to the merger/
+    ringdown, from final_i_index_finder() in matchingfuns.
+i_Aorth: list of floats
+    The values of the orthogonal/plus polarisation of strain over time for
+    the inspiral portion, from inspiral_strain_polarisations() in
+    inspiralfuns.
+i_Adiag: list of floats
+    The values of the diagonal/cross polarisation of strain over time for
+    the inspiral portion, from inspiral_strain_polarisations() in
+    inspiralfuns.
+m_Aorth: list of floats
+    The values of the orthogonal/plus polarisation of strain over time for
+    the merger/ringdown portion, from merger_polarisations().
+m_Adiag: list of floats
+    The values of the diagonal/cross polarisation of strain over time for
+    the merger/ringdown portion, from merger_polarisations().
+    
+Returns
+-------
+[i_m_Aorth,i_m_Adiag]: list of lists of floats
+    The first list is the combined orthogonal/plus polarisation values, the
+    second list is the combined diagonal/cross polarisation values.
