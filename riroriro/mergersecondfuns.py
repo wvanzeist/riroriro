@@ -190,3 +190,120 @@ def amplitude_stitching(final_i_index,i_amp,m_amp):
     i_m_amp = list(i_m_amp)
     
     return i_m_amp
+
+def merger_polarisations(final_i_index,m_amp,m_phase,i_Aorth):
+    """
+    Calculating the values of the two polarisations of strain for the merger.
+    
+    Parameters
+    ----------
+    final_i_index: int
+        The last index in the inspiral data before the switch to the merger/
+        ringdown, from final_i_index_finder() in matchingfuns.
+    m_amp: list of floats
+        The values of the amplitude of the GW strain over time for the
+        merger/ringdown portion, from merger_strain_amplitude().
+    m_phase: list of floats
+        Values of orbital phase over time for the merger/ringdown portion, from
+        merger_phase_calculation().
+    i_Aorth: list of floats
+        The values of the orthogonal/plus polarisation of strain over time for
+        the inspiral portion, from inspiral_strain_polarisations() in
+        inspiralfuns.
+        
+    Returns
+    -------
+    [m_Aorth,m_Adiag]: list of lists of floats
+        The first list is the values of the orthogonal/plus polarisation of
+        strain over time, the second list is the diagonal/cross polarisation.
+    """
+    
+    #input type checking
+    assert type(final_i_index) == int, 'final_i_index should be an int.'
+    assert type(m_amp) == list, 'm_amp should be a list.'
+    assert type(m_phase) == list, 'm_phase should be a list.'
+    
+    m_Aorth = np.empty((len(m_amp)))            #orthogonal/plus polarisation
+    m_Adiag = np.empty((len(m_amp)))            #diagonal/cross polarisation
+    
+    #adjusting phase to ensure continuity between inspiral and merger
+    #polarisations at the switching point
+    comparison_phase_1 = (1/2) * np.arccos(i_Aorth[final_i_index] / m_amp[0])
+    #phase so that m_Aorth = i_Aorth at the switching point
+    #this ensures continuity in amplitude, but for continuity in gradient of
+    #amplitude the required value could be either this or π - this:
+    comparison_phase_2 = np.pi - comparison_phase_1
+    #now a function is required that tests both and sees which one has the
+    #correct sign of the gradient
+    #the following "sign" constants indicate whether the function is
+    #increasing or decreasing at the switching point
+    sign_i_Aorth = np.sign(i_Aorth[final_i_index] - i_Aorth[final_i_index-1])
+    sign_comparison = np.sign(np.cos(2*(m_phase[1] - m_phase[0] + \
+        comparison_phase_1)) - np.cos(2*comparison_phase_1))
+    if sign_i_Aorth == sign_comparison: #signs match, phase_1 is correct
+        comparison_phase = comparison_phase_1
+    else:                               #signs don't match, phase_2 is correct
+        comparison_phase = comparison_phase_2
+    
+    phase_difference = m_phase[0] - comparison_phase
+    adjusted_m_phase = np.empty((len(m_phase)))
+    for i in range(len(m_amp)):    #adjusting phase for polarisation continuity
+        adjusted_m_phase[i] = m_phase[i] - phase_difference
+    
+    for i in range(len(m_amp)):
+        m_Aorth[i] = m_amp[i] * np.cos(2*adjusted_m_phase[i])
+        m_Adiag[i] = m_amp[i] * np.sin(2*adjusted_m_phase[i])
+    
+    #output type conversion
+    m_Aorth = list(m_Aorth)
+    m_Adiag = list(m_Adiag)
+    
+    return [m_Aorth,m_Adiag]
+
+def polarisation_stitching(final_i_index,i_Aorth,i_Adiag,m_Aorth,m_Adiag):
+    """
+    Stitching together the inspiral and merger/ringdown portions of the
+    polarisation lists to give combined lists with the correct matching.
+    
+    Parameters
+    ----------
+    final_i_index: int
+        The last index in the inspiral data before the switch to the merger/
+        ringdown, from final_i_index_finder() in matchingfuns.
+    i_Aorth: list of floats
+        The values of the orthogonal/plus polarisation of strain over time for
+        the inspiral portion, from inspiral_strain_polarisations() in
+        inspiralfuns.
+    i_Adiag: list of floats
+        The values of the diagonal/cross polarisation of strain over time for
+        the inspiral portion, from inspiral_strain_polarisations() in
+        inspiralfuns.
+    m_Aorth: list of floats
+        The values of the orthogonal/plus polarisation of strain over time for
+        the merger/ringdown portion, from merger_polarisations().
+    m_Adiag: list of floats
+        The values of the diagonal/cross polarisation of strain over time for
+        the merger/ringdown portion, from merger_polarisations().
+        
+    Returns
+    -------
+    [i_m_Aorth,i_m_Adiag]: list of lists of floats
+        The first list is the combined orthogonal/plus polarisation values, the
+        second list is the combined diagonal/cross polarisation values.
+    """
+    
+    #input type checking
+    assert type(final_i_index) == int, 'final_i_index should be an int.'
+    assert type(i_Aorth) == list, 'i_Aorth should be a list.'
+    assert type(i_Adiag) == list, 'i_Adiag should be a list.'
+    assert type(m_Aorth) == list, 'm_Aorth should be a list.'
+    assert type(m_Adiag) == list, 'm_Adiag should be a list.'
+    
+    i_m_Aorth = np.concatenate((i_Aorth[:final_i_index],m_Aorth))
+    i_m_Adiag = np.concatenate((i_Adiag[:final_i_index],m_Adiag))
+    
+    #output type conversion
+    i_m_Aorth = list(i_m_Aorth)
+    i_m_Adiag = list(i_m_Adiag)
+    
+    return [i_m_Aorth,i_m_Adiag]
