@@ -44,7 +44,8 @@ def redshift_distance_adjustment(inputarray,d,z):
     ----------
     inputarray: numpy.ndarray
         The time, frequency and amplitude data of the gravitational waveform,
-        in the format used by waveform_exporter() in gwexporter.
+        in the format used by either waveform_exporter_3col() or
+        waveform_exporter_4col() in gwexporter.
     d: float
         The luminosity distance to the merging binary, in Mpc.
     z: float
@@ -67,6 +68,8 @@ def redshift_distance_adjustment(inputarray,d,z):
         adjustedarray[i,0] = inputarray[i,0]
         adjustedarray[i,1] = inputarray[i,1] / (1+z)    #frequency redshifting
         adjustedarray[i,2] = inputarray[i,2] / (d/100)  #distance adjustment
+        if inputarray.shape[1] == 4:                #with both polarisations
+            adjustedarray[i,3] = inputarray[i,3] / (d/100)
         
     return adjustedarray
 
@@ -165,7 +168,96 @@ def findchirp_fourier(inputarray,findchirp_array,d,z):
     
     return fourieramp
 
-def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
+def proper_fourier(inputarray,freqmax):
+    """
+    Fourier transform of the gravitational wave amplitudes to the frequencies,
+    using a fft function.
+    NOTE: This function is intended to replace findchirp_fourier(). It requires
+    the version of inputarray that has the strain polarisations.
+    
+    Parameters
+    ----------
+    inputarray: numpy.ndarray
+        The time, frequency and strain polarisation data of the gravitational
+        waveform; should have been adjusted by redshift_distance_adjustment().
+    freqmax: float
+        The upper limit of the waveform signal frequency, from
+        frequency_limits().
+        
+    Returns
+    -------
+    fourieramp: list
+        Fourier-transformed/calibrated amplitudes at each frequency value in
+        inputarray.
+    """
+    
+    #import scipy.signal as signal
+    #from astropy.timeseries import LombScargle
+    from scipy.interpolate import interp1d
+    
+    #input type checking
+    assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
+    assert type(freqmax) == float, 'freqmax should be a float.'
+    
+    """ #Lomb-Scargle methods
+    #complex amplitude (combining polarisations) to be fft input
+    fourierinput = np.empty((len(inputarray)),dtype=complex)
+    for i in range(len(fourierinput)):
+        fourierinput[i] = inputarray[i,2] - 1j*inputarray[i,3]
+    
+    #we cannot use a normal fft here because the measurements are not evenly
+    #spaced in time; we use the alternative Lomb-Scargle method instead
+    #fourieramp = signal.lombscargle(inputarray[:,0],fourierinput, \
+    #                                inputarray[:,1])
+    fourieramp = LombScargle(inputarray[:,0], \
+                             fourierinput).power(inputarray[:,1])
+    """
+    
+    #FFT functions require amplitude measurements evenly spaced in time, so we
+    #have to interpolate the amplitude polarisation values
+    Aorth_inter = interp1d(inputarray[:,0], inputarray[:,2], kind='cubic')
+    Adiag_inter = interp1d(inputarray[:,0], inputarray[:,3], kind='cubic')
+    #For the array we feed to the FFT, we want to balance accuracy with
+    #CPU time and memory; the minimum sampling rate to prevent aliasing is the
+    #Nyquist rate, twice the highest frequency in the signal
+    nyquist_period = 1/(4*freqmax)      #period corresponding to Nyquist freq.
+    #(except freq. is doubled to reduce FFT glitching at high frequencies)
+    #This period won't be an exact divisor of the signal's duration, so we look
+    #for the next shorter period that *is*.
+    signal_duration = inputarray[len(inputarray)-1,0]
+    nyquist_time_ratio = signal_duration / nyquist_period
+    no_of_samples = int(np.ceil(nyquist_time_ratio))
+    #higher ratio, lower period (becomes float if not set as int)
+    sampling_period = signal_duration / no_of_samples
+    
+    #now we use amp_time_inter to generate measurements at this period
+    sampling_times = np.linspace(0,signal_duration,no_of_samples)
+    even_fourierinput = np.empty((no_of_samples),dtype=complex)
+    for i in range(no_of_samples):
+        even_fourierinput[i] = Aorth_inter(sampling_times[i]) - \
+            1j*Adiag_inter(sampling_times[i])
+    
+    raw_fourieramp = np.fft.fft(even_fourierinput)      #Fourier transform
+    raw_fourierfreqs = np.fft.fftfreq(no_of_samples,d=sampling_period)
+    
+    #removing irrelevant negative frequencies from the output
+    cplx_fourieramp = raw_fourieramp[:int(len(raw_fourieramp)/2)]
+    fourierfreqs = raw_fourierfreqs[:int(len(raw_fourierfreqs)/2)]
+    
+    #converting FFT strain values from complex to absolute/real amplitude
+    fourieramp = np.empty((len(cplx_fourieramp)))
+    for i in range(len(fourieramp)):
+        fourieramp[i] = abs(cplx_fourieramp[i])
+    
+    #output type conversion
+    fourieramp = list(fourieramp)
+    fourierfreqs = list(fourierfreqs)
+    
+    #return fourieramp    
+    #return even_fourierinput, fourieramp         #testing
+    return [fourieramp,fourierfreqs]
+
+def amplitude_interpolation(freqinput,fourieramp,noisearray,freqmax,freqmin):
     """
     The simulated gravitational waveform data and the detector noise spectrum
     are assumed to have amplitude data at different sets of frequencies, so
@@ -174,12 +266,18 @@ def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
     
     Parameters
     ----------
-    inputarray: numpy.ndarray
-        The time, frequency and amplitude data of the gravitational waveform;
-        should have been adjusted by redshift_distance_adjustment().
+    freqinput: either inputarray if using findchirp_fourier, or fourier_freqs
+        if using proper_fourier.
+        inputarray: numpy.ndarray
+            The time, frequency and amplitude data of the gravitational
+            waveform; should have been adjusted by
+            redshift_distance_adjustment().
+        fourierfreqs: list
+            The frequency values corresponding to each Fourier-transformed
+            amplitude measurement, from findchirp_fourier.
     fourieramp: list
         Fourier-transformed/calibrated amplitudes at each frequency value in
-        inputarray, from findchirp_fourier().
+        inputarray, from findchirp_fourier() or proper_fourier.
     noisearray: numpy.ndarray
         Data on the noise spectrum of the detector; it is assumed that
         frequency values are in the first column and ASD noise levels in the
@@ -199,13 +297,18 @@ def amplitude_interpolation(inputarray,fourieramp,noisearray,freqmax,freqmin):
     """
     
     #input type checking
-    assert type(inputarray) == np.ndarray, 'inputarray should be an array.'
+    assert (type(freqinput) == np.ndarray) or (type(freqinput) == list), \
+        ('freqinput should be an array (if using findchirp_fourier) or a list '
+        '(if using proper_fourier).')
     assert type(fourieramp) == list, 'fourieramp should be a list.'
     assert type(noisearray) == np.ndarray, 'noisearray should be an array.'
     assert type(freqmax) == float, 'freqmax should be a float.'
     assert type(freqmin) == float, 'freqmin should be a float.'
     
-    smoothinput = interp1d(inputarray[:,1], fourieramp[:], kind='cubic')
+    if type(freqinput) == np.ndarray:   #inputarray, from findchirp_fourier
+        smoothinput = interp1d(freqinput[:,1], fourieramp[:], kind='cubic')
+    else:                               #fourierfreqs, from proper_fourier
+        smoothinput = interp1d(freqinput[:], fourieramp[:], kind='cubic')
     #interpolating input frequency-amp curve so it can be calculated for the
     #other grid of frequencies used by noisearray
     
