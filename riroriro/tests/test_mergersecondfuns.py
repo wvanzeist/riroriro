@@ -15,4 +15,7 @@ def test_mergersecondfuns_errors():
     with pytest.raises(AssertionError):
         me2.merger_phase_calculation(1.4,1,[0,2],[0.2])
         
+    with pytest.raises(TypeError):
+        me2.merger_polarisations(0,[0.2],[0.2])
+        
     print('test_mergersecondfuns_errors completed successfully')

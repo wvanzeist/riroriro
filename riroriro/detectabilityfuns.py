@@ -40,8 +40,8 @@ def cdf_generator(N=10**6):
     for i in range(N):
         psi=random()*pi
         phi=random()*2*pi
-        costh=random()
-        cosiota=random()
+        costh=random() #random()*2 - 1 (for 0 to π rad) gives same dist.
+        cosiota=random() #same here
         #sinth = np.sqrt(1 - costh**2)
         #siniota = np.sqrt(1 - sinth**2)
         Fplus = 0.5*(1 + costh**2)*np.cos(2*phi)*np.cos(2*psi) - \
@@ -129,15 +129,17 @@ def specific_orientation_SNR(theta,phi,iota,psi,SNR_in,angle_unit='rad'):
     Parameters
     ----------
     theta: float
-        One of the angles descriving the direction of the line of sight to the
-        gravitational wave source relative to the axes of the detector’s arms
-        (sky-location coordinates). Ranges from 0 to π/2 rad (90 deg).
+        The relative latitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary). Ranges
+        from 0 to π rad (180 deg).
     phi: float
-        One of the angles descriving the direction of the line of sight to the
-        gravitational wave source relative to the axes of the detector’s arms
-        (sky-location coordinates). Ranges from 0 to 2π rad (360 deg).
+        The relative longitude, one of the angles describing the direction of
+        the line of sight to the gravitational wave source relative to the axes
+        of the detector’s arms (sky-location coordinates of the binary). Ranges
+        from 0 to 2π rad (360 deg).
     iota: float
-        The inclination angle of the binary. Ranges from 0 to π/2 rad (90 deg).
+        The inclination angle of the binary. Ranges from 0 to π rad (180 deg).
     psi: float
         The polarisation angle of the binary. Ranges from 0 to π (180 deg).
     SNR_in: float
@@ -175,10 +177,9 @@ def specific_orientation_SNR(theta,phi,iota,psi,SNR_in,angle_unit='rad'):
         raise ValueError('angle_unit must be either \'rad\' or \'deg\'.')
     
     #checking input angles are within the expected ranges
-    assert 0 <= theta <= pi/2, ('theta should be between 0 and π/2 rad (90 '
-                                'deg).')
+    assert 0 <= theta <= pi, 'theta should be between 0 and π rad (180 deg).'
     assert 0 <= phi <= 2*pi, 'phi should be between 0 and 2π rad (360 deg).'
-    assert 0 <= iota <= pi/2, 'iota should be between 0 and π/2 rad (90 deg).'
+    assert 0 <= iota <= pi, 'iota should be between 0 and π rad (180 deg).'
     assert 0 <= psi <= pi, 'psi should be between 0 and π rad (180 deg).'
     
     #calculating projection function

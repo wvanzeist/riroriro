@@ -222,6 +222,7 @@ def merger_polarisations(final_i_index,m_amp,m_phase,i_Aorth):
     assert type(final_i_index) == int, 'final_i_index should be an int.'
     assert type(m_amp) == list, 'm_amp should be a list.'
     assert type(m_phase) == list, 'm_phase should be a list.'
+    assert type(i_Aorth) == list, 'i_Aorth should be a list.' 
     
     m_Aorth = np.empty((len(m_amp)))            #orthogonal/plus polarisation
     m_Adiag = np.empty((len(m_amp)))            #diagonal/cross polarisation

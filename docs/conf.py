@@ -22,7 +22,7 @@ copyright = '2021, Wouter van Zeist'
 author = 'Wouter van Zeist'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.7'
+release = '1.0.2'
 
 
 # -- General configuration ---------------------------------------------------

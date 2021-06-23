@@ -6,6 +6,7 @@ Unit tests for the horizondistfuns module.
 
 import numpy as np
 import pytest
+import urllib.request
 import riroriro.horizondistfuns as hor
 
 def test_horizondistfuns_errors():
@@ -24,8 +25,6 @@ def test_horizondistfuns_numerical():
     Testing whether functions in horizondistfuns behave as expected
     numerically.
     """
-    
-    import urllib.request
     
     #we load in the three files of example data; ideally np.genfromtxt would be
     #used for this but these files are stored on the riroriro_tutorials github
