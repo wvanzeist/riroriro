@@ -25,7 +25,7 @@ def compact_SNR_calculation(inputarray,findchirp_array,noisearray_list,method,\
         The array output by FINDCHIRP. The second column is frequency, the
         fourth is (Fourier-transformed) strain amplitude, the other columns
         are irrelevant. A grid of sample findchirp_arrays can be found at
-        https://drive.google.com/drive/folders/12TYxYKtBL1iuFHG_ySFhS12Aqv4JHGOr
+        https://www.dropbox.com/sh/lt8109c0c2eb10c/AADBnYXMGmWOEqCK-XWFZuJLa
     noisearray_list: list of numpy.ndarrays
         Each item in this list should be an array describing the noise spectrum
         of a detector; in each noise spectrum, it is assumed that frequency
@@ -86,7 +86,7 @@ def horizon_distance_calculation(inputarray,findchirp_array,noisearray_list,\
         The array output by FINDCHIRP. The second column is frequency, the
         fourth is (Fourier-transformed) strain amplitude, the other columns
         are irrelevant. A grid of sample findchirp_arrays can be found at
-        https://drive.google.com/drive/folders/12TYxYKtBL1iuFHG_ySFhS12Aqv4JHGOr
+        https://www.dropbox.com/sh/lt8109c0c2eb10c/AADBnYXMGmWOEqCK-XWFZuJLa
     noisearray_list: list of numpy.ndarrays
         Each item in this list should be an array describing the noise spectrum
         of a detector; in each noise spectrum, it is assumed that frequency
