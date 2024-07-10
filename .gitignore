@@ -7,3 +7,4 @@ dist/
 riroriro/version.py
 .tox/
 docs/_build/
+build/
